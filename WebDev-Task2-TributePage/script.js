@@ -1,195 +1,388 @@
 ```javascript
-// ==========================================
-// MARIE CURIE TRIBUTE PAGE
-// Interactive JavaScript
-// ==========================================
+/* =========================================================
+   MARIE CURIE TRIBUTE PAGE
+   JAVASCRIPT
+========================================================= */
 
 
-// ------------------------------------------
-// Dark / Light Mode
-// ------------------------------------------
+/* =========================================================
+   DARK / LIGHT MODE
+========================================================= */
 
-const themeToggle = document.getElementById("themeToggle");
-const themeIcon = document.querySelector(".theme-icon");
+document.addEventListener("DOMContentLoaded", function () {
 
-const savedTheme = localStorage.getItem("tribute-theme");
-
-if (savedTheme === "dark") {
-    document.body.classList.add("dark-mode");
-    themeIcon.textContent = "☀";
-}
-
-themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
-
-    const isDark = document.body.classList.contains("dark-mode");
-
-    themeIcon.textContent = isDark ? "☀" : "☾";
-
-    localStorage.setItem(
-        "tribute-theme",
-        isDark ? "dark" : "light"
-    );
-});
+    const body = document.body;
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
 
 
-// ------------------------------------------
-// Intersection Observer
-// Scroll-triggered animations
-// ------------------------------------------
+    /*
+        Read saved theme.
+        If no theme exists, use light mode.
+    */
 
-const revealElements = document.querySelectorAll(".reveal");
-
-const observerOptions = {
-    threshold: 0.12,
-    rootMargin: "0px 0px -40px 0px"
-};
-
-const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-        entries.forEach((entry) => {
-
-            if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-
-                observer.unobserve(entry.target);
-            }
-
-        });
-    },
-    observerOptions
-);
-
-revealElements.forEach((element) => {
-    revealObserver.observe(element);
-});
+    const savedTheme = localStorage.getItem("tribute-theme");
 
 
-// ------------------------------------------
-// Smooth navigation enhancement
-// ------------------------------------------
+    if (savedTheme === "dark") {
 
-const navigationLinks = document.querySelectorAll(".nav-links a");
+        body.classList.add("dark-mode");
 
-navigationLinks.forEach((link) => {
+        themeIcon.textContent = "☀";
 
-    link.addEventListener("click", (event) => {
+        themeToggle.setAttribute(
+            "aria-label",
+            "Switch to light mode"
+        );
 
-        const targetId = link.getAttribute("href");
+        themeToggle.setAttribute(
+            "aria-pressed",
+            "true"
+        );
 
-        if (!targetId || !targetId.startsWith("#")) {
-            return;
+    } else {
+
+        body.classList.remove("dark-mode");
+
+        themeIcon.textContent = "☾";
+
+        themeToggle.setAttribute(
+            "aria-label",
+            "Switch to dark mode"
+        );
+
+        themeToggle.setAttribute(
+            "aria-pressed",
+            "false"
+        );
+
+    }
+
+
+    /*
+        Theme button click
+    */
+
+    themeToggle.addEventListener("click", function () {
+
+        const isCurrentlyDark =
+            body.classList.contains("dark-mode");
+
+
+        if (isCurrentlyDark) {
+
+            /* Switch to LIGHT */
+
+            body.classList.remove("dark-mode");
+
+            themeIcon.textContent = "☾";
+
+            themeToggle.setAttribute(
+                "aria-label",
+                "Switch to dark mode"
+            );
+
+            themeToggle.setAttribute(
+                "aria-pressed",
+                "false"
+            );
+
+            localStorage.setItem(
+                "tribute-theme",
+                "light"
+            );
+
+        } else {
+
+            /* Switch to DARK */
+
+            body.classList.add("dark-mode");
+
+            themeIcon.textContent = "☀";
+
+            themeToggle.setAttribute(
+                "aria-label",
+                "Switch to light mode"
+            );
+
+            themeToggle.setAttribute(
+                "aria-pressed",
+                "true"
+            );
+
+            localStorage.setItem(
+                "tribute-theme",
+                "dark"
+            );
+
         }
-
-        const target = document.querySelector(targetId);
-
-        if (!target) {
-            return;
-        }
-
-        event.preventDefault();
-
-        target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
 
     });
 
-});
+
+    /* =====================================================
+       SCROLL REVEAL
+    ===================================================== */
+
+    const revealElements =
+        document.querySelectorAll(".reveal");
 
 
-// ------------------------------------------
-// Active navigation state
-// ------------------------------------------
+    if ("IntersectionObserver" in window) {
 
-const sections = document.querySelectorAll("main section[id]");
-const navItems = document.querySelectorAll(".nav-links a");
+        const revealObserver =
+            new IntersectionObserver(
+                function (entries, observer) {
 
-const sectionObserver = new IntersectionObserver(
-    (entries) => {
+                    entries.forEach(function (entry) {
 
-        entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
 
-            if (entry.isIntersecting) {
+                            entry.target.classList.add(
+                                "visible"
+                            );
 
-                navItems.forEach((item) => {
-                    item.classList.remove("active");
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12,
+
+                    rootMargin:
+                        "0px 0px -40px 0px"
+                }
+            );
+
+
+        revealElements.forEach(function (element) {
+
+            revealObserver.observe(element);
+
+        });
+
+    } else {
+
+        /*
+            Fallback for older browsers
+        */
+
+        revealElements.forEach(function (element) {
+
+            element.classList.add("visible");
+
+        });
+
+    }
+
+
+    /* =====================================================
+       ACTIVE NAVIGATION
+    ===================================================== */
+
+    const sections =
+        document.querySelectorAll(
+            "main section[id]"
+        );
+
+
+    const navLinks =
+        document.querySelectorAll(
+            ".nav-links a"
+        );
+
+
+    if ("IntersectionObserver" in window) {
+
+        const sectionObserver =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(function (entry) {
+
+                        if (!entry.isIntersecting) {
+                            return;
+                        }
+
+
+                        navLinks.forEach(function (link) {
+
+                            link.classList.remove(
+                                "active"
+                            );
+
+                        });
+
+
+                        const activeLink =
+                            document.querySelector(
+                                `.nav-links a[href="#${entry.target.id}"]`
+                            );
+
+
+                        if (activeLink) {
+
+                            activeLink.classList.add(
+                                "active"
+                            );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.25,
+
+                    rootMargin:
+                        "-20% 0px -55% 0px"
+                }
+            );
+
+
+        sections.forEach(function (section) {
+
+            sectionObserver.observe(section);
+
+        });
+
+    }
+
+
+    /* =====================================================
+       SMOOTH NAVIGATION
+    ===================================================== */
+
+    navLinks.forEach(function (link) {
+
+        link.addEventListener(
+            "click",
+            function (event) {
+
+                const targetId =
+                    link.getAttribute("href");
+
+
+                if (
+                    !targetId ||
+                    !targetId.startsWith("#")
+                ) {
+                    return;
+                }
+
+
+                const target =
+                    document.querySelector(
+                        targetId
+                    );
+
+
+                if (!target) {
+                    return;
+                }
+
+
+                event.preventDefault();
+
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
                 });
 
-                const activeLink = document.querySelector(
-                    `.nav-links a[href="#${entry.target.id}"]`
-                );
+            }
+        );
 
-                if (activeLink) {
-                    activeLink.classList.add("active");
-                }
+    });
+
+
+    /* =====================================================
+       TIMELINE INTERACTION
+    ===================================================== */
+
+    const timelineItems =
+        document.querySelectorAll(
+            ".timeline-item"
+        );
+
+
+    timelineItems.forEach(function (item) {
+
+        item.addEventListener(
+            "mouseenter",
+            function () {
+
+                item.style.transform =
+                    "translateX(7px)";
+
+            }
+        );
+
+
+        item.addEventListener(
+            "mouseleave",
+            function () {
+
+                item.style.transform =
+                    "translateX(0)";
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       KEYBOARD ACCESSIBILITY
+    ===================================================== */
+
+    themeToggle.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
+                themeToggle.click();
+
             }
 
-        });
-
-    },
-    {
-        threshold: 0.25,
-        rootMargin: "-20% 0px -55% 0px"
-    }
-);
-
-sections.forEach((section) => {
-    sectionObserver.observe(section);
-});
+        }
+    );
 
 
-// ------------------------------------------
-// Timeline interaction
-// ------------------------------------------
+    /* =====================================================
+       CURRENT YEAR
+    ===================================================== */
 
-const timelineItems = document.querySelectorAll(".timeline-item");
-
-timelineItems.forEach((item) => {
-
-    item.addEventListener("mouseenter", () => {
-        item.style.transform = "translateX(8px)";
-        item.style.transition = "transform 0.35s ease";
-    });
-
-    item.addEventListener("mouseleave", () => {
-        item.style.transform = "translateX(0)";
-    });
-
-});
+    const footerYear =
+        document.getElementById("footerYear");
 
 
-// ------------------------------------------
-// Keyboard accessibility
-// ------------------------------------------
+    if (footerYear) {
 
-themeToggle.addEventListener("keydown", (event) => {
+        footerYear.textContent =
+            `© ${new Date().getFullYear()}`;
 
-    if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        themeToggle.click();
     }
 
-});
 
+    /* =====================================================
+       PAGE LOADED
+    ===================================================== */
 
-// ------------------------------------------
-// Current year in footer
-// ------------------------------------------
+    document.body.classList.add(
+        "page-loaded"
+    );
 
-const footerYear = document.querySelector(".footer-meta span:last-child");
-
-if (footerYear) {
-    footerYear.textContent = `© ${new Date().getFullYear()}`;
-}
-
-
-// ------------------------------------------
-// Page loaded
-// ------------------------------------------
-
-window.addEventListener("load", () => {
-    document.body.classList.add("page-loaded");
 });
 ```
