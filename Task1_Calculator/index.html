@@ -6,7 +6,7 @@
 <title>Voltmeter — Scientific Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="dark">
@@ -37,7 +37,7 @@
 
     <main class="calc-body">
 
-      <div class="screen" id="screen">
+      <div class="screen pixel-corners" id="screen">
         <div class="screen-glass">
           <div class="expression" id="expression" aria-live="off"></div>
           <div class="result-row">
@@ -103,7 +103,7 @@
 
     </main>
 
-    <aside class="history-panel" id="historyPanel" aria-label="Full history log" hidden>
+    <aside class="history-panel pixel-corners" id="historyPanel" aria-label="Full history log" hidden>
       <div class="history-panel-head">
         <h2>Calculation log</h2>
         <button class="panel-close" id="closeHistory" aria-label="Close history">✕</button>
