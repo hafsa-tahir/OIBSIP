@@ -1,3 +1,4 @@
+
 # Voltmeter — Scientific Calculator
 
 **Oasis Infobyte — Web Development & Designing Internship — Level 2, Task 1**
@@ -26,10 +27,16 @@ A browser-based calculator with a Standard mode and a Scientific mode, built wit
 - A full history panel (via the **Log** button) lists every calculation this session — click any entry to reload it into the screen
 - History is in-memory for the session (not persisted to disk/localStorage)
 
-**Design**
-- Dark/light theme toggle, calculator styled like a physical LCD device (IBM Plex Mono display font, glowing digit color)
+**Design — 8-bit pixel hardware**
+- Two distinct hardware identities, not just a color swap:
+  - **Light mode** — a classic handheld LCD (Game-Boy-style DMG screen): cream shell, olive-green screen, flat dark-green ink digits
+  - **Dark mode** — a neon arcade cabinet: near-black case, glowing cyan display, magenta/yellow/green accent keys
+- Pixel-notched corners (via CSS `clip-path`) on the case, screen, and history panel
+- Hard-edged "pressable sprite" buttons — square corners, offset pixel shadow that collapses on press for tactile 8-bit feedback
+- `Press Start 2P` for labels/branding, `VT323` for the display and history (authentic pixel-terminal fonts)
+- Scanline overlay and a blinking pixel status LED on the screen
 - Fully responsive down to small mobile widths
-- Visible keyboard focus states; respects `prefers-reduced-motion`
+- Visible keyboard focus states; respects `prefers-reduced-motion` (animations become instant/static)
 
 ## How the math works (no `eval()`)
 
