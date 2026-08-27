@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voltmeter — Scientific Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+
+  <div class="app">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">Voltmeter</span>
+      </div>
+
+      <div class="mode-switch" role="tablist" aria-label="Calculator mode">
+        <button class="mode-btn is-active" role="tab" aria-selected="true" data-mode="standard">Standard</button>
+        <button class="mode-btn" role="tab" aria-selected="false" data-mode="scientific">Scientific</button>
+        <span class="mode-thumb" aria-hidden="true"></span>
+      </div>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Switch to light theme">
+        <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
+        <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7M18.4 18.4l-1.7-1.7M7.3 7.3 5.6 5.6"/></g></svg>
+      </button>
+    </header>
+
+    <section class="history-strip" id="historyStrip" aria-label="Calculation history">
+      <span class="history-empty" id="historyEmpty">History will collect here as you calculate</span>
+    </section>
+
+    <main class="calc-body">
+
+      <div class="screen" id="screen">
+        <div class="screen-glass">
+          <div class="expression" id="expression" aria-live="off"></div>
+          <div class="result-row">
+            <span class="mem-flag" id="memFlag" aria-hidden="true">M</span>
+            <div class="result" id="result" aria-live="polite">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="memory-row" role="group" aria-label="Memory controls">
+        <button class="key key-mem" data-action="mc">MC</button>
+        <button class="key key-mem" data-action="mr">MR</button>
+        <button class="key key-mem" data-action="mplus">M+</button>
+        <button class="key key-mem" data-action="mminus">M−</button>
+        <button class="key key-mem" data-action="history">Log</button>
+      </div>
+
+      <div class="sci-grid" id="sciGrid" hidden>
+        <button class="key key-sci" data-action="sin">sin</button>
+        <button class="key key-sci" data-action="cos">cos</button>
+        <button class="key key-sci" data-action="tan">tan</button>
+        <button class="key key-sci" data-action="paren-open">(</button>
+        <button class="key key-sci" data-action="paren-close">)</button>
+
+        <button class="key key-sci" data-action="log">log</button>
+        <button class="key key-sci" data-action="ln">ln</button>
+        <button class="key key-sci" data-action="sqrt">√</button>
+        <button class="key key-sci" data-action="pow">xʸ</button>
+        <button class="key key-sci" data-action="fact">x!</button>
+
+        <button class="key key-sci" data-action="pi">π</button>
+        <button class="key key-sci" data-action="e">e</button>
+        <button class="key key-sci" data-action="inv">1/x</button>
+        <button class="key key-sci" data-action="square">x²</button>
+        <button class="key key-sci" data-action="exp">EXP</button>
+      </div>
+
+      <div class="main-grid">
+        <button class="key key-func" data-action="clear">C</button>
+        <button class="key key-func" data-action="backspace" aria-label="Backspace">⌫</button>
+        <button class="key key-func" data-action="percent">%</button>
+        <button class="key key-op" data-action="divide">÷</button>
+
+        <button class="key key-num" data-num="7">7</button>
+        <button class="key key-num" data-num="8">8</button>
+        <button class="key key-num" data-num="9">9</button>
+        <button class="key key-op" data-action="multiply">×</button>
+
+        <button class="key key-num" data-num="4">4</button>
+        <button class="key key-num" data-num="5">5</button>
+        <button class="key key-num" data-num="6">6</button>
+        <button class="key key-op" data-action="subtract">−</button>
+
+        <button class="key key-num" data-num="1">1</button>
+        <button class="key key-num" data-num="2">2</button>
+        <button class="key key-num" data-num="3">3</button>
+        <button class="key key-op" data-action="add">+</button>
+
+        <button class="key key-num key-zero" data-num="0">0</button>
+        <button class="key key-num" data-action="decimal">.</button>
+        <button class="key key-equals" data-action="equals">=</button>
+      </div>
+
+    </main>
+
+    <aside class="history-panel" id="historyPanel" aria-label="Full history log" hidden>
+      <div class="history-panel-head">
+        <h2>Calculation log</h2>
+        <button class="panel-close" id="closeHistory" aria-label="Close history">✕</button>
+      </div>
+      <ul class="history-list" id="historyList">
+        <li class="history-placeholder">Nothing calculated yet. Your first result will land here.</li>
+      </ul>
+      <button class="clear-history" id="clearHistory">Clear log</button>
+    </aside>
+
+    <div class="scrim" id="scrim" hidden></div>
+
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

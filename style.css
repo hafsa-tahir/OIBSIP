@@ -1,0 +1,481 @@
+/* ===========================================================
+   Voltmeter — Scientific Calculator
+   Design language: a physical LCD calculator reimagined.
+   =========================================================== */
+
+:root {
+  --font-display: 'IBM Plex Mono', 'Courier New', monospace;
+  --font-ui: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+
+  --volt: #4C8DFF;      /* operator accent */
+  --amber: #E3A73B;     /* scientific accent */
+  --teal: #35B7A6;      /* memory accent */
+  --danger: #E2604F;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  color-scheme: dark;
+}
+
+/* ---- Dark theme (default) ---- */
+body[data-theme="dark"] {
+  --page-bg: #0B0C0D;
+  --case-bg: #1B1D20;
+  --case-bg-raised: #202226;
+  --screen-bg: #0E140E;
+  --screen-glow: #8FE38A;
+  --screen-dim: #3E5C3D;
+  --key-num-bg: #2B2E32;
+  --key-num-bg-hover: #34373C;
+  --key-text: #ECEAE4;
+  --key-func-bg: #383B40;
+  --panel-bg: #17191C;
+  --border-soft: rgba(255,255,255,0.06);
+  --shadow-case: 0 30px 60px -20px rgba(0,0,0,0.6), 0 2px 0 rgba(255,255,255,0.03) inset;
+}
+
+/* ---- Light theme ---- */
+body[data-theme="light"] {
+  color-scheme: light;
+  --page-bg: #EDEAE1;
+  --case-bg: #F8F6F0;
+  --case-bg-raised: #FFFFFF;
+  --screen-bg: #C9D6BC;
+  --screen-glow: #24361F;
+  --screen-dim: #5E7256;
+  --key-num-bg: #FFFFFF;
+  --key-num-bg-hover: #F0EDE4;
+  --key-text: #24261F;
+  --key-func-bg: #E4E0D5;
+  --panel-bg: #FFFFFF;
+  --border-soft: rgba(0,0,0,0.07);
+  --shadow-case: 0 30px 60px -24px rgba(60,50,30,0.25), 0 2px 0 rgba(255,255,255,0.6) inset;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--page-bg);
+  font-family: var(--font-ui);
+  transition: background 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+button:focus-visible,
+.mode-btn:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 2px;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+}
+
+/* ---------------- Top bar ---------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.brand-mark {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--screen-glow);
+  box-shadow: 0 0 8px var(--screen-glow);
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--key-text);
+}
+
+.mode-switch {
+  position: relative;
+  display: inline-flex;
+  background: var(--case-bg-raised);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.mode-btn {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  color: var(--key-text);
+  opacity: 0.55;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.mode-btn.is-active { opacity: 1; }
+
+.mode-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: calc(100% - 6px);
+  width: 78px;
+  background: var(--volt);
+  border-radius: 999px;
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+  z-index: 0;
+}
+
+body[data-scimode="true"] .mode-thumb {
+  transform: translateX(78px);
+}
+
+.mode-btn.is-active { color: #fff; }
+body[data-theme="light"] .mode-btn.is-active { color: #fff; }
+
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--case-bg-raised);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--key-text);
+  flex-shrink: 0;
+}
+
+.icon { width: 16px; height: 16px; }
+.icon-sun { display: none; }
+body[data-theme="light"] .icon-sun { display: block; }
+body[data-theme="light"] .icon-moon { display: none; }
+
+/* ---------------- History strip ---------------- */
+
+.history-strip {
+  min-height: 22px;
+  padding: 0 8px 8px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--screen-dim);
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.history-strip::-webkit-scrollbar { display: none; }
+
+.history-empty { opacity: 0.6; }
+
+.history-chip { opacity: 0.85; }
+
+/* ---------------- Calculator body ---------------- */
+
+.calc-body {
+  background: var(--case-bg);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-case);
+  border: 1px solid var(--border-soft);
+}
+
+.screen {
+  background: var(--screen-bg);
+  border-radius: var(--radius-md);
+  padding: 20px 18px 16px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.02) 0px,
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+.screen-glass { position: relative; }
+
+.expression {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--screen-dim);
+  min-height: 18px;
+  text-align: right;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  margin-bottom: 6px;
+}
+.expression::-webkit-scrollbar { display: none; }
+
+.result-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.mem-flag {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  padding: 0 4px;
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.2s ease;
+}
+.mem-flag.is-visible { opacity: 1; }
+
+.result {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.1;
+  color: var(--screen-glow);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--screen-glow) 55%, transparent);
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  scrollbar-width: none;
+}
+.result::-webkit-scrollbar { display: none; }
+
+.result.is-error { color: var(--danger); text-shadow: none; font-size: 22px; }
+
+.result.pulse { animation: pulse 0.28s ease; }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+
+/* ---------------- Key grids ---------------- */
+
+.memory-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sci-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.key {
+  height: 52px;
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--key-text);
+  background: var(--key-num-bg);
+  transition: background 0.12s ease, transform 0.06s ease;
+}
+
+.key:active { transform: scale(0.96); }
+
+.key-num:hover { background: var(--key-num-bg-hover); }
+
+.key-zero { grid-column: span 1; }
+
+.key-func {
+  background: var(--key-func-bg);
+  font-size: 15px;
+}
+
+.key-op {
+  background: transparent;
+  border: 1.5px solid var(--volt);
+  color: var(--volt);
+  font-size: 19px;
+}
+.key-op:hover { background: color-mix(in srgb, var(--volt) 12%, transparent); }
+
+.key-equals {
+  background: var(--volt);
+  color: #fff;
+  font-size: 19px;
+}
+.key-equals:hover { filter: brightness(1.08); }
+
+.key-mem {
+  height: 38px;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  border: 1.5px solid var(--teal);
+  color: var(--teal);
+  border-radius: var(--radius-sm);
+}
+.key-mem:hover { background: color-mix(in srgb, var(--teal) 12%, transparent); }
+.key-mem:last-child { border-color: var(--key-text); color: var(--key-text); opacity: 0.7; }
+
+.key-sci {
+  height: 42px;
+  font-size: 13px;
+  background: transparent;
+  border: 1.5px solid var(--amber);
+  color: var(--amber);
+}
+.key-sci:hover { background: color-mix(in srgb, var(--amber) 12%, transparent); }
+
+/* ---------------- History panel (slide-in) ---------------- */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 10;
+}
+
+.history-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(320px, 88vw);
+  background: var(--panel-bg);
+  border-left: 1px solid var(--border-soft);
+  z-index: 11;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(0);
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.history-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.history-panel-head h2 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--key-text);
+  margin: 0;
+}
+
+.panel-close {
+  background: var(--key-func-bg);
+  color: var(--key-text);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.history-list li {
+  font-family: var(--font-display);
+  font-size: 13px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--key-text);
+  cursor: pointer;
+}
+
+.history-list li:hover { color: var(--volt); }
+
+.history-placeholder {
+  opacity: 0.5;
+  cursor: default !important;
+}
+.history-placeholder:hover { color: var(--key-text) !important; }
+
+.history-entry-expr {
+  display: block;
+  font-size: 11px;
+  opacity: 0.6;
+  margin-bottom: 2px;
+}
+
+.clear-history {
+  margin-top: 12px;
+  background: transparent;
+  border: 1.5px solid var(--danger);
+  color: var(--danger);
+  border-radius: var(--radius-sm);
+  height: 40px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 380px) {
+  .result { font-size: 32px; }
+  .key { height: 46px; font-size: 15px; }
+  .key-mem { height: 34px; }
+}
