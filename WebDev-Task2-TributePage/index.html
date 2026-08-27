@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -104,7 +103,9 @@
     cursor: pointer;
     display:flex; align-items:center;
     padding: 0 4px;
+    transition: border-color 0.2s ease;
   }
+  .knife-switch:hover{ border-color: var(--cyan); }
   .knife-switch .lever{
     position:absolute; top:4px; left:4px;
     width: 30px; height: 30px;
@@ -191,12 +192,15 @@
     padding: 36px 34px;
     background: var(--panel-bg);
     position: relative;
+    transition: border-color 0.3s ease;
   }
+  .fig-panel:hover{ border-color: var(--cyan); }
   .fig-panel::before{
     content: attr(data-fig);
     position: absolute; top: -13px; left: 24px;
     background: var(--bg); padding: 0 10px;
     font-family: var(--mono); font-size: 12px; letter-spacing: 2px; color: var(--cyan);
+    transition: background .5s ease;
   }
   .fig-panel h2{
     font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem,3.4vw,2.1rem);
@@ -210,10 +214,6 @@
     font-family: var(--mono); font-size: 11px; color: var(--brass);
     letter-spacing: 1.5px; display:block; margin-bottom: 6px;
   }
-
-  /* schematic diagram decoration */
-  .schematic{ width:100%; height: auto; opacity: .9; }
-  .schematic path, .schematic circle, .schematic rect{ stroke: var(--cyan-dim); }
 
   /* ---------- TIMELINE ---------- */
   .timeline-section h2.section-title{
@@ -247,16 +247,26 @@
     background: var(--brass); border: 3px solid var(--bg);
     box-shadow: 0 0 0 1px var(--cyan);
     cursor:pointer;
+    transition: transform 0.2s ease;
   }
+  input[type=range]::-webkit-slider-thumb:hover{ transform: scale(1.15); }
   input[type=range]::-moz-range-thumb{
     width:20px; height:20px; border-radius:50%;
     background: var(--brass); border: 3px solid var(--bg);
     box-shadow: 0 0 0 1px var(--cyan); cursor:pointer;
   }
 
-  .tick-row{ display:flex; justify-content: space-between; font-family: var(--mono); font-size:10px; color: var(--text-soft); margin-top: -18px; margin-bottom: 26px; padding: 0 2px;}
+  .tick-row{ 
+    display:flex; justify-content: space-between; font-family: var(--mono); font-size:10px; color: var(--text-soft); margin-top: -18px; margin-bottom: 26px; padding: 0 2px;
+  }
+  .tick-row span{
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px;
+  }
+  .tick-row span:hover{ color: var(--cyan); }
 
-  .event-card{ min-height: 120px; }
+  .event-card{ min-height: 120px; transition: opacity 0.25s ease; }
   .event-card .ev-title{ font-family: var(--display); font-weight: 600; font-size: 1.3rem; margin: 0 0 8px;}
   .event-card .ev-body{ color: var(--text-soft); line-height: 1.7; font-size: 15px; margin:0; }
 
@@ -348,7 +358,7 @@
   <section class="timeline-section reveal">
     <div class="section-eyebrow">Interactive Record</div>
     <h2 class="section-title">A Life, Scrubbed by Hand</h2>
-    <p class="section-sub">Drag the dial to move through the years. Each stop pulls up the log entry for that moment in Tesla's career.</p>
+    <p class="section-sub">Drag the dial or click any year on the tick bar to move through Tesla's career.</p>
 
     <div class="dial-panel">
       <div class="year-readout">
@@ -357,7 +367,7 @@
       </div>
       <input type="range" id="yearSlider" min="0" max="9" step="1" value="0" aria-label="Timeline year selector">
       <div class="tick-row" id="tickRow"></div>
-      <div class="event-card">
+      <div class="event-card" id="eventCard">
         <div class="ev-title" id="evTitle">Born in Smiljan</div>
         <p class="ev-body" id="evBody">Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination.</p>
       </div>
@@ -383,7 +393,6 @@
 
 <script>
 (function(){
-  // ---------- Day / Night toggle ----------
   const body = document.body;
   const switchBtn = document.getElementById('switchBtn');
   const modeLabel = document.getElementById('modeLabel');
@@ -393,7 +402,6 @@
     modeLabel.textContent = day ? 'DAY' : 'NIGHT';
     switchBtn.setAttribute('aria-pressed', day ? 'true' : 'false');
   }
-  const stored = null; // no localStorage dependency; default to night
   setMode(false);
 
   switchBtn.addEventListener('click', () => setMode(!body.classList.contains('day')));
@@ -401,11 +409,9 @@
     if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setMode(!body.classList.contains('day')); }
   });
 
-  // ---------- Hero charge-up on load ----------
   const hero = document.getElementById('hero');
   requestAnimationFrame(() => setTimeout(() => hero.classList.add('charged'), 400));
 
-  // ---------- Scroll-triggered reveal (Intersection Observer) ----------
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -417,7 +423,6 @@
   }, { threshold: 0.18 });
   revealEls.forEach(el => io.observe(el));
 
-  // ---------- Timeline slider ----------
   const events = [
     { year: 1856, title: "Born in Smiljan", body: "Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination." },
     { year: 1882, title: "The Rotating Field", body: "While walking in a Budapest park, Tesla visualizes the principle of the rotating magnetic field — the seed of every practical AC motor that followed." },
@@ -436,11 +441,18 @@
   const evTitle = document.getElementById('evTitle');
   const evBody = document.getElementById('evBody');
   const tickRow = document.getElementById('tickRow');
+  const eventCard = document.getElementById('eventCard');
 
   events.forEach((e, i) => {
     const span = document.createElement('span');
     span.textContent = e.year;
-    span.style.opacity = '0.55';
+    span.style.opacity = '0.7';
+    span.title = `Jump to ${e.year}`;
+    span.addEventListener('click', () => {
+      slider.value = i;
+      updateFill(slider);
+      renderEvent(i);
+    });
     tickRow.appendChild(span);
   });
 
@@ -451,9 +463,13 @@
 
   function renderEvent(i){
     const e = events[i];
-    yearBig.textContent = e.year;
-    evTitle.textContent = e.title;
-    evBody.textContent = e.body;
+    eventCard.style.opacity = '0';
+    setTimeout(() => {
+      yearBig.textContent = e.year;
+      evTitle.textContent = e.title;
+      evBody.textContent = e.body;
+      eventCard.style.opacity = '1';
+    }, 120);
   }
 
   slider.addEventListener('input', () => {
