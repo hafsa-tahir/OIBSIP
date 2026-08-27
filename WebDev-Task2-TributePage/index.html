@@ -1,804 +1,469 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nikola Tesla — A Life in Circuits | Tribute Page</title>
+<meta name="description" content="An interactive tribute to Nikola Tesla, styled as a facsimile of his own patent drawings.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1E33;
+    --navy-deep:#071522;
+    --grid-dark: rgba(95,227,224,0.09);
+    --grid-dark-strong: rgba(95,227,224,0.16);
+    --paper:#F0E9D8;
+    --paper-deep:#E7DEC8;
+    --grid-light: rgba(22,35,46,0.10);
+    --grid-light-strong: rgba(22,35,46,0.18);
+    --cyan:#5FE3E0;
+    --cyan-dim: rgba(95,227,224,0.35);
+    --brass:#C08F4E;
+    --ink:#16232E;
+    --ink-soft: rgba(22,35,46,0.68);
+    --paper-ink:#EFF6F7;
+    --paper-ink-soft: rgba(239,246,247,0.72);
 
-    <meta
-        name="description"
-        content="A modern responsive tribute page dedicated to Marie Curie."
-    >
+    --bg: var(--navy);
+    --bg-deep: var(--navy-deep);
+    --grid: var(--grid-dark);
+    --grid-strong: var(--grid-dark-strong);
+    --text: var(--paper-ink);
+    --text-soft: var(--paper-ink-soft);
+    --panel-bg: rgba(240,233,216,0.04);
+    --panel-border: rgba(95,227,224,0.28);
+    --stamp: var(--brass);
 
-    <title>Marie Curie — A Legacy of Discovery</title>
+    --display: 'Roboto Slab', serif;
+    --body: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  body.day{
+    --bg: var(--paper);
+    --bg-deep: var(--paper-deep);
+    --grid: var(--grid-light);
+    --grid-strong: var(--grid-light-strong);
+    --text: var(--ink);
+    --text-soft: var(--ink-soft);
+    --panel-bg: rgba(22,35,46,0.03);
+    --panel-border: rgba(22,35,46,0.22);
+    --cyan: #1D8E8B;
+    --cyan-dim: rgba(29,142,139,0.30);
+  }
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
-        rel="stylesheet"
-    >
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    transition: background .5s ease, color .5s ease;
+    overflow-x: hidden;
+  }
 
-    <link rel="stylesheet" href="style.css">
+  .blueprint-grid{
+    position: fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      linear-gradient(var(--grid-strong) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-strong) 1px, transparent 1px);
+    background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+    transition: background .5s ease;
+  }
+
+  a{ color: var(--cyan); }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position: fixed; top:0; left:0; right:0; z-index: 50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 28px;
+    backdrop-filter: blur(6px);
+    background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+  }
+  .brand{
+    font-family: var(--mono); letter-spacing: 3px; font-size: 12px;
+    color: var(--text-soft);
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .dot{ width:6px;height:6px;border-radius:50%;background:var(--cyan); box-shadow:0 0 8px var(--cyan);}
+
+  /* Knife-switch toggle */
+  .switch-wrap{ display:flex; align-items:center; gap:10px; font-family: var(--mono); font-size:11px; color:var(--text-soft); letter-spacing:1px;}
+  .knife-switch{
+    position: relative; width: 74px; height: 40px;
+    border: 2px solid var(--panel-border);
+    border-radius: 4px;
+    background: var(--panel-bg);
+    cursor: pointer;
+    display:flex; align-items:center;
+    padding: 0 4px;
+  }
+  .knife-switch .lever{
+    position:absolute; top:4px; left:4px;
+    width: 30px; height: 30px;
+    background: var(--brass);
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    transition: transform .35s cubic-bezier(.6,-0.3,.3,1.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 14px;
+  }
+  body.day .knife-switch .lever{ transform: translateX(36px); }
+  .knife-switch .terminals{
+    position:absolute; width:6px;height:6px;border-radius:50%;
+    background: var(--cyan); box-shadow: 0 0 6px var(--cyan);
+    top: 50%; transform: translateY(-50%);
+  }
+  .knife-switch .terminals.left{ left: 6px; }
+  .knife-switch .terminals.right{ right: 6px; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 120px 20px 60px;
+  }
+  .fig-label{
+    font-family: var(--mono); font-size: 12px; letter-spacing: 4px;
+    color: var(--cyan); text-transform: uppercase; margin-bottom: 18px;
+  }
+  .coil-wrap{ width: 220px; height: 220px; margin-bottom: 10px; }
+  .coil-wrap svg{ width:100%; height:100%; overflow: visible; }
+  .coil-ring{ fill:none; stroke: var(--cyan-dim); stroke-width: 2; }
+  .coil-core{ fill:none; stroke: var(--brass); stroke-width: 3; }
+  .arc{
+    fill:none; stroke: var(--cyan); stroke-width: 1.6; opacity:0;
+    stroke-dasharray: 40 200;
+    filter: drop-shadow(0 0 4px var(--cyan));
+  }
+  .hero.charged .arc{ animation: flicker 2.4s infinite; }
+  .hero.charged .arc:nth-child(2){ animation-delay: .3s; }
+  .hero.charged .arc:nth-child(3){ animation-delay: .8s; }
+  .hero.charged .arc:nth-child(4){ animation-delay: 1.3s; }
+  @keyframes flicker{
+    0%, 100%{ opacity:0; stroke-dashoffset: 0;}
+    5%{ opacity:1; }
+    12%{ opacity:0.2; }
+    18%{ opacity:.9; }
+    30%{ opacity:0; stroke-dashoffset: 240;}
+  }
+
+  h1.name{
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(2.6rem, 8vw, 5.5rem);
+    margin: 0; line-height: 0.95; letter-spacing: -1px;
+  }
+  .subhead{
+    font-family: var(--mono); font-size: 13px; letter-spacing: 2px;
+    color: var(--text-soft); margin-top: 18px; max-width: 520px;
+  }
+  .patent-no{
+    margin-top: 28px; font-family: var(--mono); font-size: 11px;
+    color: var(--text-soft); border: 1px dashed var(--panel-border);
+    padding: 8px 16px; border-radius: 2px;
+  }
+  .scroll-cue{
+    position:absolute; bottom: 28px; left:50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--text-soft);
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    animation: bob 2s ease-in-out infinite;
+  }
+  @keyframes bob{ 0%,100%{transform:translate(-50%,0);} 50%{transform:translate(-50%,6px);} }
+  .scroll-cue .line{ width:1px; height: 24px; background: linear-gradient(var(--cyan), transparent); }
+
+  /* ---------- SECTIONS ---------- */
+  section{ position:relative; z-index:1; max-width: 980px; margin: 0 auto; padding: 90px 24px; }
+
+  .reveal{ opacity: 0; transform: translateY(36px); transition: opacity .8s ease, transform .8s cubic-bezier(.16,.84,.44,1); }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+
+  .fig-panel{
+    border: 1px dashed var(--panel-border);
+    border-radius: 3px;
+    padding: 36px 34px;
+    background: var(--panel-bg);
+    position: relative;
+  }
+  .fig-panel::before{
+    content: attr(data-fig);
+    position: absolute; top: -13px; left: 24px;
+    background: var(--bg); padding: 0 10px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 2px; color: var(--cyan);
+  }
+  .fig-panel h2{
+    font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem,3.4vw,2.1rem);
+    margin: 6px 0 16px;
+  }
+  .fig-panel p{ color: var(--text-soft); line-height: 1.75; font-size: 16px; margin: 0 0 12px; }
+  .two-col{ display:grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  @media (max-width: 720px){ .two-col{ grid-template-columns: 1fr; } }
+
+  .callout-num{
+    font-family: var(--mono); font-size: 11px; color: var(--brass);
+    letter-spacing: 1.5px; display:block; margin-bottom: 6px;
+  }
+
+  /* schematic diagram decoration */
+  .schematic{ width:100%; height: auto; opacity: .9; }
+  .schematic path, .schematic circle, .schematic rect{ stroke: var(--cyan-dim); }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline-section h2.section-title{
+    font-family: var(--display); font-weight: 800; text-align:center;
+    font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 6px;
+  }
+  .section-eyebrow{
+    text-align:center; font-family: var(--mono); font-size:11px; letter-spacing:3px;
+    color: var(--cyan); text-transform:uppercase; margin-bottom: 14px;
+  }
+  .section-sub{ text-align:center; color: var(--text-soft); max-width: 560px; margin: 0 auto 50px; }
+
+  .dial-panel{
+    border: 1px solid var(--panel-border); border-radius: 6px;
+    padding: 32px 30px 26px; background: var(--panel-bg);
+  }
+  .year-readout{
+    display:flex; justify-content: space-between; align-items:baseline;
+    font-family: var(--mono); margin-bottom: 20px;
+  }
+  .year-big{ font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem,7vw,3.6rem); color: var(--cyan); line-height:1; }
+  .year-range{ font-size: 11px; color: var(--text-soft); letter-spacing: 1px; }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height: 6px;
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--cyan) var(--fill,0%), var(--panel-border) var(--fill,0%), var(--panel-border) 100%);
+    border-radius: 3px; outline:none; margin: 10px 0 26px; cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:20px; height:20px; border-radius:50%;
+    background: var(--brass); border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--cyan);
+    cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px; height:20px; border-radius:50%;
+    background: var(--brass); border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--cyan); cursor:pointer;
+  }
+
+  .tick-row{ display:flex; justify-content: space-between; font-family: var(--mono); font-size:10px; color: var(--text-soft); margin-top: -18px; margin-bottom: 26px; padding: 0 2px;}
+
+  .event-card{ min-height: 120px; }
+  .event-card .ev-title{ font-family: var(--display); font-weight: 600; font-size: 1.3rem; margin: 0 0 8px;}
+  .event-card .ev-body{ color: var(--text-soft); line-height: 1.7; font-size: 15px; margin:0; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    position: relative; z-index:1; text-align:center; padding: 60px 24px 80px;
+    font-family: var(--mono); font-size: 11px; color: var(--text-soft); letter-spacing: 1px;
+  }
+  .seal{
+    width: 74px; height:74px; border: 1px dashed var(--panel-border); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; margin: 0 auto 20px;
+    font-family: var(--mono); font-size: 9px; color: var(--brass); letter-spacing:1px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
 </head>
-
 <body>
 
-    <!-- =========================
-         NAVIGATION
-    ========================== -->
-
-    <header class="site-header">
-
-        <nav class="navbar">
-
-            <a href="#hero" class="brand">
-                MC<span>.</span>
-            </a>
-
-            <div class="nav-links">
-                <a href="#about">About</a>
-                <a href="#timeline">Timeline</a>
-                <a href="#legacy">Legacy</a>
-            </div>
-
-            <button
-                type="button"
-                class="theme-toggle"
-                id="themeToggle"
-                aria-label="Switch to dark mode"
-                aria-pressed="false"
-            >
-                <span id="themeIcon">☾</span>
-            </button>
-
-        </nav>
-
-    </header>
-
-
-    <main>
-
-        <!-- =========================
-             HERO
-        ========================== -->
-
-        <section class="hero" id="hero">
-
-            <div class="hero-grid">
-
-                <div class="hero-content reveal">
-
-                    <p class="eyebrow">
-                        PIONEER • SCIENTIST • VISIONARY
-                    </p>
-
-                    <h1>
-                        Marie<br>
-                        <em>Curie</em>
-                    </h1>
-
-                    <p class="hero-tagline">
-                        A life devoted to discovery, scientific courage,
-                        and the pursuit of knowledge.
-                    </p>
-
-                    <a href="#about" class="primary-button">
-                        Explore her story
-                        <span>↓</span>
-                    </a>
-
-                </div>
-
-
-                <div class="hero-image-wrap reveal">
-
-                    <div class="image-frame">
-
-                        <img
-                            src="assets/marie-curie.jpg"
-                            alt="Portrait of Marie Curie"
-                        >
-
-                    </div>
-
-                    <div class="hero-caption">
-                        <span>1867 — 1934</span>
-                        <span>WARSAW → PARIS</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="hero-bottom">
-
-                <span>TRIBUTE PAGE</span>
-                <span>01 / 05</span>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             INTRODUCTION
-        ========================== -->
-
-        <section class="intro section-light">
-
-            <div class="intro-grid">
-
-                <div class="section-number reveal">
-                    <span>01</span>
-                    <span>INTRODUCTION</span>
-                </div>
-
-
-                <div class="intro-content reveal">
-
-                    <p class="large-text">
-                        Marie Curie transformed the world of science through
-                        her relentless curiosity and groundbreaking research
-                        into radioactivity.
-                    </p>
-
-                    <p class="intro-description">
-                        Her work challenged scientific assumptions of her era
-                        and opened new paths in physics, chemistry, and medicine.
-                        She became one of the most influential scientists in
-                        modern history.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             BIOGRAPHY
-        ========================== -->
-
-        <section class="about section-dark" id="about">
-
-            <div class="section-container">
-
-                <div class="section-heading reveal">
-
-                    <div>
-
-                        <p class="eyebrow">
-                            HER STORY
-                        </p>
-
-                        <h2>
-                            A mind that<br>
-                            <em>changed science.</em>
-                        </h2>
-
-                    </div>
-
-                    <p class="section-index">
-                        02 / BIOGRAPHY
-                    </p>
-
-                </div>
-
-
-                <div class="bio-grid">
-
-                    <article class="bio-card reveal">
-
-                        <span class="bio-number">
-                            01
-                        </span>
-
-                        <h3>
-                            Early Years
-                        </h3>
-
-                        <p>
-                            Born Maria Skłodowska in Warsaw in 1867, Curie
-                            grew up in a family that placed enormous value
-                            on education. At a time when women faced major
-                            barriers to higher education in her homeland,
-                            she remained determined to continue learning.
-                        </p>
-
-                    </article>
-
-
-                    <article class="bio-card reveal">
-
-                        <span class="bio-number">
-                            02
-                        </span>
-
-                        <h3>
-                            Paris & Science
-                        </h3>
-
-                        <p>
-                            She moved to Paris and enrolled at the Sorbonne,
-                            studying physics and mathematics. Despite financial
-                            hardship and demanding living conditions, she
-                            performed exceptionally well and established the
-                            academic foundation for her scientific career.
-                        </p>
-
-                    </article>
-
-
-                    <article class="bio-card reveal">
-
-                        <span class="bio-number">
-                            03
-                        </span>
-
-                        <h3>
-                            Groundbreaking Research
-                        </h3>
-
-                        <p>
-                            Working with Pierre Curie, she investigated unusual
-                            radiation emitted by certain materials. Their
-                            experiments contributed to the discovery of polonium
-                            and radium and helped establish radioactivity as a
-                            major field of scientific study.
-                        </p>
-
-                    </article>
-
-
-                    <article class="bio-card reveal">
-
-                        <span class="bio-number">
-                            04
-                        </span>
-
-                        <h3>
-                            A Lasting Legacy
-                        </h3>
-
-                        <p>
-                            Curie's scientific accomplishments earned her Nobel
-                            Prizes in both Physics and Chemistry. During the
-                            First World War, she also promoted mobile X-ray
-                            services that helped doctors examine wounded
-                            soldiers closer to the battlefield.
-                        </p>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             ACHIEVEMENTS
-        ========================== -->
-
-        <section class="achievements section-accent">
-
-            <div class="section-container achievements-grid">
-
-                <div class="achievement-intro reveal">
-
-                    <p class="eyebrow">
-                        SCIENTIFIC MILESTONES
-                    </p>
-
-                    <h2>
-                        Discovery<br>
-                        through <em>persistence.</em>
-                    </h2>
-
-                    <p>
-                        Curie's career was shaped by years of experimentation,
-                        careful observation, and an extraordinary commitment
-                        to scientific discovery.
-                    </p>
-
-                </div>
-
-
-                <div class="stats reveal">
-
-                    <div class="stat">
-                        <strong>2</strong>
-                        <span>Nobel Prizes</span>
-                    </div>
-
-                    <div class="stat">
-                        <strong>2</strong>
-                        <span>Scientific Fields</span>
-                    </div>
-
-                    <div class="stat">
-                        <strong>1</strong>
-                        <span>Extraordinary Legacy</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             TIMELINE
-        ========================== -->
-
-        <section class="timeline-section section-light" id="timeline">
-
-            <div class="section-container">
-
-                <div class="section-heading timeline-heading reveal">
-
-                    <div>
-
-                        <p class="eyebrow">
-                            THE JOURNEY
-                        </p>
-
-                        <h2>
-                            Moments that<br>
-                            <em>made history.</em>
-                        </h2>
-
-                    </div>
-
-                    <p class="section-index">
-                        03 / TIMELINE
-                    </p>
-
-                </div>
-
-
-                <div class="timeline">
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1867
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>WARSAW</span>
-
-                            <h3>
-                                A Scientist Is Born
-                            </h3>
-
-                            <p>
-                                Maria Skłodowska was born in Warsaw. Her family
-                                encouraged education despite the political and
-                                social challenges surrounding Poland at the time.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1891
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>PARIS</span>
-
-                            <h3>
-                                A New Academic Life
-                            </h3>
-
-                            <p>
-                                Curie moved to Paris and began studying at the
-                                University of Paris, pursuing physics and
-                                mathematics.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1898
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>DISCOVERY</span>
-
-                            <h3>
-                                Polonium & Radium
-                            </h3>
-
-                            <p>
-                                Marie and Pierre Curie announced the discovery
-                                of polonium and later identified radium while
-                                studying radioactive materials.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1903
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>NOBEL PRIZE</span>
-
-                            <h3>
-                                Nobel Prize in Physics
-                            </h3>
-
-                            <p>
-                                Curie shared the Nobel Prize in Physics with
-                                Pierre Curie and Henri Becquerel for their
-                                contributions to understanding radiation.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1911
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>NOBEL PRIZE</span>
-
-                            <h3>
-                                Nobel Prize in Chemistry
-                            </h3>
-
-                            <p>
-                                Curie received a second Nobel Prize, this time
-                                in Chemistry, recognizing her work involving
-                                radium and polonium.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                    <article class="timeline-item reveal">
-
-                        <div class="timeline-year">
-                            1914–18
-                        </div>
-
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-
-                            <span>WORLD WAR I</span>
-
-                            <h3>
-                                Science on the Front Lines
-                            </h3>
-
-                            <p>
-                                Curie helped organize mobile radiography units,
-                                making X-ray examinations more accessible for
-                                wounded soldiers.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             QUOTE
-        ========================== -->
-
-        <section class="quote-section">
-
-            <div class="quote-container reveal">
-
-                <div class="quote-mark">
-                    “
-                </div>
-
-                <blockquote>
-                    Nothing in life is to be feared,
-                    it is only to be understood.
-                </blockquote>
-
-                <div class="quote-line"></div>
-
-                <p>
-                    — MARIE CURIE
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             LEGACY
-        ========================== -->
-
-        <section class="legacy section-dark" id="legacy">
-
-            <div class="section-container">
-
-                <div class="section-heading reveal">
-
-                    <div>
-
-                        <p class="eyebrow">
-                            BEYOND HER TIME
-                        </p>
-
-                        <h2>
-                            The legacy<br>
-                            <em>continues.</em>
-                        </h2>
-
-                    </div>
-
-                    <p class="section-index">
-                        04 / LEGACY
-                    </p>
-
-                </div>
-
-
-                <div class="legacy-grid">
-
-                    <div class="legacy-main reveal">
-
-                        <p class="legacy-large">
-                            Marie Curie's influence reaches far beyond the
-                            discoveries that earned her international recognition.
-                        </p>
-
-                        <p>
-                            Her research helped establish radioactivity as a
-                            major area of scientific investigation and influenced
-                            later developments in medical diagnosis and treatment.
-                        </p>
-
-                        <p>
-                            Her life also became an example of perseverance.
-                            Curie's career demonstrated how intellectual curiosity,
-                            rigorous research, and persistence could overcome
-                            significant social and professional barriers.
-                        </p>
-
-                    </div>
-
-
-                    <div class="legacy-list reveal">
-
-                        <div class="legacy-item">
-
-                            <span>01</span>
-
-                            <div>
-
-                                <h3>
-                                    Scientific Pioneer
-                                </h3>
-
-                                <p>
-                                    Helped establish radioactivity as a major
-                                    scientific field.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="legacy-item">
-
-                            <span>02</span>
-
-                            <div>
-
-                                <h3>
-                                    Medical Impact
-                                </h3>
-
-                                <p>
-                                    Her research contributed to radiation-based
-                                    medical applications.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="legacy-item">
-
-                            <span>03</span>
-
-                            <div>
-
-                                <h3>
-                                    Inspiration
-                                </h3>
-
-                                <p>
-                                    Became a lasting symbol of scientific
-                                    determination and curiosity.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             SOURCES
-        ========================== -->
-
-        <section class="sources section-light">
-
-            <div class="section-container sources-grid">
-
-                <div class="reveal">
-
-                    <p class="eyebrow">
-                        RESEARCH & ATTRIBUTION
-                    </p>
-
-                    <h2>
-                        Sources
-                    </h2>
-
-                </div>
-
-
-                <div class="sources-content reveal">
-
-                    <p>
-                        This tribute page was created for educational purposes.
-                        Historical information was researched and paraphrased
-                        from reputable reference sources.
-                    </p>
-
-                    <ul>
-
-                        <li>
-                            Encyclopaedia Britannica — Marie Curie
-                        </li>
-
-                        <li>
-                            Wikipedia — Marie Curie
-                        </li>
-
-                        <li>
-                            Wikimedia Commons — Marie Curie imagery
-                        </li>
-
-                    </ul>
-
-                    <div class="attribution">
-
-                        <strong>Image Attribution</strong>
-
-                        <p>
-                            Replace this text with the exact Wikimedia Commons
-                            file name, creator and license information for the
-                            image you use in the assets folder.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
-    <footer class="footer">
-
-        <div class="footer-inner">
-
-            <div>
-
-                <span class="footer-brand">
-                    MC<span>.</span>
-                </span>
-
-                <p>
-                    A tribute to a life of discovery.
-                </p>
-
-            </div>
-
-
-            <div class="footer-meta">
-
-                <span>
-                    OIBSIP • WEB DEVELOPMENT
-                </span>
-
-                <span>
-                    TASK 2 • TRIBUTE PAGE
-                </span>
-
-                <span id="footerYear">
-                    © 2026
-                </span>
-
-            </div>
-
-        </div>
-
-    </footer>
-
-
-    <script src="script.js"></script>
-
+<div class="blueprint-grid" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="brand"><span class="dot"></span> TESLA — TRIBUTE ARCHIVE</div>
+  <div class="switch-wrap">
+    <span id="modeLabel">NIGHT</span>
+    <div class="knife-switch" id="switchBtn" role="button" aria-label="Toggle day and night mode" tabindex="0">
+      <span class="terminals left"></span>
+      <span class="terminals right"></span>
+      <span class="lever">⚡</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="fig-label">Fig. 0 — Portrait of the Inventor</div>
+    <div class="coil-wrap">
+      <svg viewBox="0 0 220 220">
+        <circle class="coil-ring" cx="110" cy="110" r="95"/>
+        <circle class="coil-ring" cx="110" cy="110" r="78"/>
+        <line class="coil-core" x1="110" y1="30" x2="110" y2="190"/>
+        <path class="arc" d="M110,30 Q150,60 130,90 Q100,120 140,150 Q160,170 110,190"/>
+        <path class="arc" d="M110,30 Q70,55 95,85 Q125,115 80,145 Q60,165 110,190"/>
+        <path class="arc" d="M110,30 Q140,70 105,100 Q80,130 120,160 Q140,178 110,190"/>
+        <path class="arc" d="M110,30 Q75,65 115,95 Q145,125 100,155 Q80,175 110,190"/>
+      </svg>
+    </div>
+    <h1 class="name">NIKOLA TESLA</h1>
+    <p class="subhead">1856 – 1943 · Engineer of alternating current, wireless transmission, and the electrified century that followed him.</p>
+    <div class="patent-no">FACSIMILE TRIBUTE — NOT AN OFFICIAL PATENT DOCUMENT</div>
+    <div class="scroll-cue"><span class="line"></span>SCROLL</div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel" data-fig="FIG. 1">
+      <span class="callout-num">01 · SMILJAN, CROATIA</span>
+      <h2>A Mind Wired for Invention</h2>
+      <div class="two-col">
+        <p>Born in 1856 in the village of Smiljan, Tesla showed an early gift for visualizing entire machines in his head before ever touching a tool. He claimed he could build and test an invention mentally, down to its wear points, without drawing a single line — a habit that would later fill his notebooks with designs years ahead of the workshops that could build them.</p>
+        <p>He studied engineering in Graz and Prague, and it was there, staring at a sparking DC motor, that he first imagined a rotating magnetic field — the idea that alternating current, rather than fighting itself, could be made to spin in continuous, elegant motion.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel" data-fig="FIG. 2">
+      <span class="callout-num">02 · THE CURRENT WAR</span>
+      <h2>Alternating Current, Set Loose</h2>
+      <div class="two-col">
+        <p>In 1884 Tesla arrived in New York with little more than a letter of introduction to Thomas Edison. Their partnership was brief; Tesla's belief in alternating current put him at odds with Edison's DC empire. He struck out on his own, and by 1888 his AC induction motor patents had been licensed by George Westinghouse.</p>
+        <p>The rivalry became public spectacle. Tesla's system won the contract to light the 1893 World's Columbian Exposition in Chicago, and two years later it was harnessing Niagara Falls itself — proof that power could travel far from where it was made.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel" data-fig="FIG. 3">
+      <span class="callout-num">03 · WARDENCLYFFE, LONG ISLAND</span>
+      <h2>A World Without Wires</h2>
+      <div class="two-col">
+        <p>Tesla's ambitions outgrew the power grid. In 1898 he demonstrated a radio-controlled boat to a startled New York audience — one of the first working pieces of what we would now call robotics. He believed the same principle could send not just signals but electricity itself through the air.</p>
+        <p>Construction began on the Wardenclyffe Tower in 1901, meant to broadcast wireless communication and power across the Atlantic. Funding collapsed before the vision could be tested at scale, but the tower's silhouette remains a symbol of ideas that arrived before their infrastructure did.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline-section reveal">
+    <div class="section-eyebrow">Interactive Record</div>
+    <h2 class="section-title">A Life, Scrubbed by Hand</h2>
+    <p class="section-sub">Drag the dial to move through the years. Each stop pulls up the log entry for that moment in Tesla's career.</p>
+
+    <div class="dial-panel">
+      <div class="year-readout">
+        <div class="year-big" id="yearBig">1856</div>
+        <div class="year-range">1856 —— 1943</div>
+      </div>
+      <input type="range" id="yearSlider" min="0" max="9" step="1" value="0" aria-label="Timeline year selector">
+      <div class="tick-row" id="tickRow"></div>
+      <div class="event-card">
+        <div class="ev-title" id="evTitle">Born in Smiljan</div>
+        <p class="ev-body" id="evBody">Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel" data-fig="FIG. 4">
+      <span class="callout-num">04 · LEGACY</span>
+      <h2>What Still Runs on His Ideas</h2>
+      <div class="two-col">
+        <p>Tesla died in New York in 1943, largely out of the public eye and with several projects unfinished. Yet the alternating current system he championed became the backbone of the electrical grid the world still runs on — from the outlet behind your desk to the substations that feed entire cities.</p>
+        <p>His fingerprints are on more than power lines: radio, remote control, and wireless energy transfer all trace a line back to patents he filed a century ago. The tribute you're reading is delivered, fittingly, over a wireless signal he would have recognized as the fulfillment of his own unfinished tower.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="seal">TRIBUTE<br>ARCHIVE</div>
+  Built as a tribute page exercise · design facsimile of a patent drawing · not affiliated with the Tesla estate
+</footer>
+
+<script>
+(function(){
+  // ---------- Day / Night toggle ----------
+  const body = document.body;
+  const switchBtn = document.getElementById('switchBtn');
+  const modeLabel = document.getElementById('modeLabel');
+
+  function setMode(day){
+    body.classList.toggle('day', day);
+    modeLabel.textContent = day ? 'DAY' : 'NIGHT';
+    switchBtn.setAttribute('aria-pressed', day ? 'true' : 'false');
+  }
+  const stored = null; // no localStorage dependency; default to night
+  setMode(false);
+
+  switchBtn.addEventListener('click', () => setMode(!body.classList.contains('day')));
+  switchBtn.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setMode(!body.classList.contains('day')); }
+  });
+
+  // ---------- Hero charge-up on load ----------
+  const hero = document.getElementById('hero');
+  requestAnimationFrame(() => setTimeout(() => hero.classList.add('charged'), 400));
+
+  // ---------- Scroll-triggered reveal (Intersection Observer) ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---------- Timeline slider ----------
+  const events = [
+    { year: 1856, title: "Born in Smiljan", body: "Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination." },
+    { year: 1882, title: "The Rotating Field", body: "While walking in a Budapest park, Tesla visualizes the principle of the rotating magnetic field — the seed of every practical AC motor that followed." },
+    { year: 1884, title: "Arrives in New York", body: "Tesla emigrates to the United States and briefly works for Thomas Edison, before their differing visions for electrical power drive him to strike out alone." },
+    { year: 1888, title: "AC Patents Licensed", body: "George Westinghouse licenses Tesla's AC induction motor patents, arming the \"War of Currents\" with a serious alternative to Edison's DC systems." },
+    { year: 1891, title: "The Tesla Coil", body: "Tesla patents his high-frequency resonant transformer and begins touring with dazzling public demonstrations of wireless illumination." },
+    { year: 1893, title: "Chicago World's Fair", body: "Tesla and Westinghouse's AC system is chosen to illuminate the World's Columbian Exposition, lighting the fairgrounds for millions of visitors." },
+    { year: 1895, title: "Niagara Falls Power", body: "A hydroelectric AC power station at Niagara Falls begins transmitting electricity over distance, proving the case for AC once and for all." },
+    { year: 1898, title: "Radio-Controlled Boat", body: "Tesla demonstrates a wirelessly steered boat to a startled New York audience, an early ancestor of remote control and robotics." },
+    { year: 1901, title: "Wardenclyffe Begins", body: "Construction starts on the Wardenclyffe Tower, Tesla's ambitious attempt at worldwide wireless communication and power transmission." },
+    { year: 1943, title: "Tesla Dies in New York", body: "Tesla passes away largely out of the public eye, leaving behind an AC power system that still forms the backbone of the modern electrical grid." }
+  ];
+
+  const slider = document.getElementById('yearSlider');
+  const yearBig = document.getElementById('yearBig');
+  const evTitle = document.getElementById('evTitle');
+  const evBody = document.getElementById('evBody');
+  const tickRow = document.getElementById('tickRow');
+
+  events.forEach((e, i) => {
+    const span = document.createElement('span');
+    span.textContent = e.year;
+    span.style.opacity = '0.55';
+    tickRow.appendChild(span);
+  });
+
+  function updateFill(el){
+    const pct = (el.value - el.min) / (el.max - el.min) * 100;
+    el.style.setProperty('--fill', pct + '%');
+  }
+
+  function renderEvent(i){
+    const e = events[i];
+    yearBig.textContent = e.year;
+    evTitle.textContent = e.title;
+    evBody.textContent = e.body;
+  }
+
+  slider.addEventListener('input', () => {
+    updateFill(slider);
+    renderEvent(parseInt(slider.value, 10));
+  });
+
+  updateFill(slider);
+  renderEvent(0);
+})();
+</script>
 </body>
 </html>
-```
