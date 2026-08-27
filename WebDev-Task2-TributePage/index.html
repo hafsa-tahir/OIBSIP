@@ -1,395 +1,528 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nikola Tesla — Archival Ledger</title>
-<meta name="description" content="A curated archival tribute to Nikola Tesla, styled as a historical document and exhibition ledger.">
+<title>Nikola Tesla — The Archive</title>
+<meta name="description" content="An interactive tribute to Nikola Tesla, styled with clean architectural precision and a non-neon palette.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    /* Pure Monochrome Dark Mode (Zero Neon / Zero Warm Accents) */
-    --bg: #121315;
-    --surface: #181A1D;
-    --text: #E2E4E8;
-    --text-muted: #828A95;
-    --line: #262A2F;
-    --accent: #A3ABB2; /* Neutral Industrial Steel */
-    --accent-dim: rgba(163, 171, 178, 0.08);
+  :root{
+    /* --- NON-NEON PALETTE (Solid, Matte, Architectural) --- */
+    --color-bg: #121315;
+    --color-text: #E5E2DC;
+    --color-text-soft: #8C939B;
+    --color-accent: #C49A6C; /* Clean Muted Brass / Bronze */
+    --color-accent-dim: rgba(196, 154, 108, 0.1);
+    --color-brass: #C49A6C;
+    --color-line: #26292E; /* Solid subtle border line */
     
-    --font-serif: 'Newsreader', serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-display: 'Roboto Slab', serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 8rem;
   }
 
-  body.light {
-    --bg: #F4F1EA;
-    --surface: #ECE7DF;
-    --text: #1C1E20;
-    --text-muted: #6B7278;
-    --line: #D5CEBE;
-    --accent: #4A525B;
-    --accent-dim: rgba(74, 82, 91, 0.08);
+  body.day{
+    --color-bg: #F4F1EA;
+    --color-text: #1F2937;
+    --color-text-soft: #6B7280;
+    --color-accent: #9A6E3B;
+    --color-accent-dim: rgba(154, 110, 59, 0.08);
+    --color-brass: #9A6E3B;
+    --color-line: #D5CEBE;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; font-size: 16px; }
-
-  body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: var(--font-serif);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    line-height: 1.6;
+  *{ box-sizing: border-box; margin: 0; padding: 0; }
+  html{ scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+  
+  body{
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    transition: background-color .3s ease, color .3s ease;
     overflow-x: hidden;
+    line-height: 1.6;
   }
 
-  /* Architectural Grid Lines Overlay */
-  body::before {
-    content: "";
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    background-image: 
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: 80px 80px;
-    opacity: 0.35;
+  a{ color: var(--color-accent); text-decoration: none; transition: opacity 0.3s ease; }
+  a:hover{ opacity: 0.7; }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position: fixed; top: var(--space-sm); left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 1200px; z-index: 50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-bg);
+    border: 1px solid var(--color-line);
+    border-radius: 50px;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
 
-  /* ---------- HEADER / NAV ---------- */
-  header.ledger-nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    background: var(--bg);
-    border-bottom: 1px solid var(--line);
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 1rem 2.5rem;
-    transition: background 0.3s ease;
+  .brand{
+    font-family: var(--font-mono); letter-spacing: 1.5px; font-size: 0.75rem;
+    color: var(--color-text-soft);
+    display:flex; align-items:center; gap:8px;
+    font-weight: 500;
   }
+  .brand .dot{ width:6px; height:6px; border-radius:50%; background: var(--color-accent); }
 
-  .nav-brand {
-    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;
-    color: var(--text-muted);
-    text-transform: uppercase;
+  .switch-wrap{ display:flex; align-items:center; gap:12px; font-family: var(--font-mono); font-size: 0.68rem; color:var(--color-text-soft); }
+  .knife-switch{
+    position: relative; width: 55px; height: 28px;
+    border: 1px solid var(--color-line);
+    border-radius: 15px;
+    background: var(--color-surface, rgba(255,255,255,0.02));
+    cursor: pointer;
+    display:flex; align-items:center;
+    padding: 0 3px;
+    transition: border-color 0.3s ease;
   }
+  .knife-switch:hover { border-color: var(--color-accent); }
 
-  .mode-toggle {
-    background: none; border: 1px solid var(--line);
-    color: var(--text); font-family: var(--font-mono); font-size: 0.7rem;
-    letter-spacing: 0.1em; padding: 0.4rem 0.8rem; cursor: pointer;
-    transition: all 0.2s ease;
+  .knife-switch .lever{
+    position:absolute; top:2px; left:2px;
+    width: 22px; height: 22px;
+    background: var(--color-brass);
+    border-radius: 50%;
+    transition: transform .3s ease;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 10px;
+    color: var(--color-bg);
   }
-  .mode-toggle:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* ---------- MAIN CONTAINER ---------- */
-  main {
-    position: relative; z-index: 1;
-    max-width: 1000px; margin: 0 auto;
-    padding: 10rem 2.5rem 6rem;
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
-    background: var(--bg);
-  }
+  body.day .knife-switch .lever{ transform: translateX(27px); }
 
   /* ---------- HERO ---------- */
-  .hero {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 4rem;
+  .hero{
+    position: relative; z-index: 1;
+    min-height: 95vh;
+    display: flex;
     align-items: center;
-    padding-bottom: 6rem;
-    border-bottom: 1px solid var(--line);
+    justify-content: center;
+    padding: calc(var(--space-xl) * 1.2) var(--space-md) var(--space-xl);
+    max-width: 1200px; margin: 0 auto;
   }
 
-  @media (max-width: 768px) {
-    .hero { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: center;
+    width: 100%;
   }
 
-  .hero-meta {
-    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em;
-    color: var(--accent); text-transform: uppercase; margin-bottom: 1rem;
+  @media (max-width: 900px){
+    .hero-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-visuals { border-right: none !important; padding-right: 0 !important; align-items: center !important; }
+    .hero-text { padding-left: 0 !important; }
   }
 
-  h1.hero-title {
-    font-family: var(--font-serif); font-weight: 700;
-    font-size: clamp(3rem, 6vw, 4.5rem);
-    line-height: 1.05; letter-spacing: -0.02em;
-    margin-bottom: 1.5rem;
+  .hero-visuals {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-right: var(--space-md);
+    border-right: 1px solid var(--color-line);
   }
 
-  .hero-desc {
-    color: var(--text-muted); font-size: 1.15rem;
-    max-width: 440px; margin-bottom: 2rem;
+  .fig-label{
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 3px;
+    color: var(--color-accent); text-transform: uppercase; margin-bottom: var(--space-md);
   }
 
-  .hero-blueprint {
-    border: 1px solid var(--line);
-    background: var(--surface);
-    padding: 2rem;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    position: relative;
+  .coil-wrap{ width: 260px; height: 260px; }
+  .coil-wrap svg{ width:100%; height:100%; overflow: visible; }
+  .coil-ring{ fill:none; stroke: var(--color-line); stroke-width: 1.5; }
+  .coil-core{ fill:none; stroke: var(--color-brass); stroke-width: 2; }
+  .arc{
+    fill:none; stroke: var(--color-text-soft); stroke-width: 1.5; opacity: 0.4;
+    stroke-dasharray: 40 200;
   }
   
-  /* Corner drafting marks */
-  .hero-blueprint::before, .hero-blueprint::after,
-  .panel::before, .panel::after {
-    content: ""; position: absolute; width: 6px; height: 6px; border: 1px solid var(--accent);
+  .hero.charged .arc{ animation: flicker 6s infinite ease-in-out; }
+  .hero.charged .arc:nth-child(2){ animation-delay: 1s; }
+  .hero.charged .arc:nth-child(3){ animation-delay: 2.2s; }
+  .hero.charged .arc:nth-child(4){ animation-delay: 3.5s; }
+  @keyframes flicker{
+    0%, 100%{ opacity:0.2; stroke-dashoffset: 0;}
+    50%{ opacity:0.8; stroke-dashoffset: -200;}
   }
-  .hero-blueprint::before { top: 4px; left: 4px; border-right: none; border-bottom: none; }
-  .hero-blueprint::after { top: 4px; right: 4px; border-left: none; border-bottom: none; }
 
-  .coil-svg { width: 100%; max-width: 200px; height: auto; }
-  .coil-ring { fill: none; stroke: var(--line); stroke-width: 1.5; }
-  .coil-core { fill: none; stroke: var(--accent); stroke-width: 2; }
-  .coil-line { fill: none; stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 3 3; }
+  .hero-text {
+    text-align: left;
+    padding-left: var(--space-md);
+  }
 
-  /* ---------- CONTENT PANELS ---------- */
-  .panel {
-    padding: 5rem 0;
-    border-bottom: 1px solid var(--line);
+  h1.name{
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    margin: 0 0 var(--space-sm) -4px;
+    line-height: 0.92; letter-spacing: -3px;
+    color: var(--color-text); /* Solid text color, no gradients */
+  }
+  .subhead{
+    font-family: var(--font-body); font-weight: 300; font-size: 1.15rem;
+    color: var(--color-text-soft); max-width: 440px;
+    line-height: 1.6;
+  }
+  .patent-no{
+    margin-top: var(--space-md); font-family: var(--font-mono); font-size: 0.65rem;
+    color: var(--color-text-soft); border: 1px solid var(--color-line);
+    padding: 6px 12px; border-radius: 4px; display: inline-block;
+  }
+
+  .scroll-cue{
+    position:absolute; bottom: var(--space-sm); left:50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 3px; color: var(--color-text-soft);
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .scroll-cue .line{ width:1px; height: 30px; background: var(--color-line); }
+
+  /* ---------- SECTIONS ---------- */
+  main {
     position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
   }
 
-  .panel-header {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 2rem;
-    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;
-    color: var(--text-muted);
+  section{ 
+    position:relative; z-index:1; 
+    padding: var(--space-lg) 0;
+    border-top: 1px solid var(--color-line);
   }
 
-  .panel-header span:last-child { color: var(--accent); }
+  .reveal{ opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform: translateY(0); }
 
-  .panel h2 {
-    font-family: var(--font-serif); font-weight: 500; font-style: italic;
-    font-size: 2.25rem; margin-bottom: 1.5rem;
+  .fig-panel{
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-lg);
+    align-items: start;
+    padding: var(--space-md) 0;
+  }
+  @media (max-width: 768px){
+    .fig-panel { grid-template-columns: 1fr; gap: var(--space-sm); }
   }
 
-  .panel-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
-  }
-  @media (max-width: 768px) {
-    .panel-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-  }
-
-  .panel-grid p {
-    color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;
+  .fig-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
   }
 
-  /* ---------- TIMELINE SECTION ---------- */
+  .fig-tag {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 2px;
+    color: var(--color-accent); text-transform: uppercase;
+  }
+
+  .callout-num{
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-brass);
+    letter-spacing: 1.5px; font-weight: 600;
+  }
+
+  .fig-content h2{
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.2rem);
+    margin-bottom: var(--space-md); letter-spacing: -0.5px;
+    color: var(--color-text);
+  }
+  .fig-content .text-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+  @media (max-width: 850px){
+    .fig-content .text-grid { grid-template-columns: 1fr; }
+  }
+  .fig-content p { color: var(--color-text-soft); font-size: 1.05rem; line-height: 1.75; }
+
+  /* ---------- TIMELINE ---------- */
   .timeline-section {
-    padding: 6rem 0;
-    border-bottom: 1px solid var(--line);
+    padding: var(--space-xl) 0;
+  }
+  .timeline-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-lg);
+  }
+  .section-eyebrow{
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 3px;
+    color: var(--color-accent); text-transform:uppercase; margin-bottom: var(--space-xs);
+  }
+  .section-title{
+    font-family: var(--font-display); font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3rem); margin-bottom: var(--space-xs);
+  }
+  .section-sub{ color: var(--color-text-soft); font-size: 1rem; }
+
+  .dial-panel{
+    border: 1px solid var(--color-line); border-radius: 4px;
+    padding: var(--space-lg); background: var(--color-bg);
+    max-width: 800px; margin: 0 auto;
+  }
+  .year-readout{
+    display:flex; justify-content: space-between; align-items:baseline;
+    font-family: var(--font-mono); margin-bottom: var(--space-md);
+  }
+  .year-big{ font-family: var(--font-display); font-weight: 900; font-size: clamp(3rem, 8vw, 4.5rem); color: var(--color-accent); line-height:1; }
+  .year-range{ font-size: 0.75rem; color: var(--color-text-soft); letter-spacing: 1.5px; }
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; width:100%; height: 2px;
+    background: var(--color-line);
+    outline:none; margin: var(--space-sm) 0 var(--space-md); cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:16px; height:16px; border-radius:0;
+    background: var(--color-brass); border: 2px solid var(--color-bg);
+    cursor:pointer;
   }
 
-  .timeline-container {
-    border: 1px solid var(--line);
-    background: var(--surface);
-    padding: 3rem;
-    margin-top: 2rem;
+  .tick-row{ 
+    display:flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-text-soft); margin-bottom: var(--space-lg); padding: 0 2px;
   }
-
-  .timeline-readout {
-    display: flex; justify-content: space-between; align-items: baseline;
-    font-family: var(--font-mono); margin-bottom: 2rem;
+  .tick-row span{
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 4px;
   }
+  .tick-row span:hover{ color: var(--color-accent); }
 
-  .timeline-year {
-    font-family: var(--font-serif); font-size: 3.5rem; font-weight: 700;
-    color: var(--accent); line-height: 1;
-  }
-
-  .timeline-range { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; }
-
-  input[type="range"] {
-    -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
-    background: var(--line); outline: none; margin: 2rem 0; cursor: pointer;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 0;
-    background: var(--accent); border: 2px solid var(--bg); cursor: pointer;
-  }
-
-  .timeline-ticks {
-    display: flex; justify-content: space-between;
-    font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
-    margin-bottom: 2.5rem;
-  }
-  .timeline-ticks span { cursor: pointer; transition: color 0.2s; }
-  .timeline-ticks span:hover { color: var(--accent); }
-
-  .timeline-content { min-height: 120px; transition: opacity 0.25s ease; }
-  .timeline-content h3 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 500; margin-bottom: 0.75rem; }
-  .timeline-content p { color: var(--text-muted); font-size: 1.05rem; }
+  .event-card{ min-height: 100px; transition: opacity 0.2s ease; }
+  .event-card .ev-title{ font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; margin-bottom: var(--space-xs); color: var(--color-text); }
+  .event-card .ev-body{ color: var(--color-text-soft); line-height: 1.7; font-size: 1.05rem; }
 
   /* ---------- FOOTER ---------- */
-  footer {
-    padding: 4rem 0 2rem;
-    text-align: center;
-    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em;
-    color: var(--text-muted);
+  footer{
+    position: relative; z-index:1; text-align:center; padding: var(--space-xl) var(--space-md);
+    font-family: var(--font-mono); font-size: 0.7rem; color: var(--color-text-soft); letter-spacing: 1.5px;
+    border-top: 1px solid var(--color-line);
+    margin-top: var(--space-xl);
+  }
+  .seal{
+    width: 60px; height: 60px; border: 1px solid var(--color-line); border-radius: 50%;
+    display:flex; align-items:center; justify-content:center; margin: 0 auto var(--space-md);
+    font-family: var(--font-mono); font-size: 0.6rem; color: var(--color-brass); letter-spacing: 1px;
   }
 </style>
 </head>
 <body>
 
-<header class="ledger-nav">
-  <div class="nav-brand">REF // 1856-1943-NT</div>
-  <button class="mode-toggle" id="modeToggle">MODE: ARCHIVE</button>
+<header class="nav">
+  <div class="brand"><span class="dot"></span> TESLA — ARCHIVE</div>
+  <div class="switch-wrap">
+    <span id="modeLabel">NIGHT</span>
+    <div class="knife-switch" id="switchBtn" role="button" aria-label="Toggle day and night mode" tabindex="0">
+      <span class="lever">⚡</span>
+    </div>
+  </div>
 </header>
 
 <main>
-  <section class="hero">
-    <div>
-      <div class="hero-meta">Historical Ledger · Folio 001</div>
-      <h1 class="hero-title">Nikola Tesla</h1>
-      <p class="hero-desc">Architect of alternating electrical currents, high-frequency resonance fields, and foundational wireless paradigms.</p>
-    </div>
-    <div class="hero-blueprint">
-      <svg class="coil-svg" viewBox="0 0 200 200">
-        <circle class="coil-ring" cx="100" cy="100" r="85"/>
-        <circle class="coil-ring" cx="100" cy="100" r="65"/>
-        <line class="coil-line" x1="100" y1="15" x2="100" y2="185"/>
-        <circle class="coil-core" cx="100" cy="100" r="20"/>
-        <circle class="coil-core" cx="100" cy="100" r="5" fill="var(--accent)"/>
-      </svg>
-      <div style="font-family: var(--font-mono); font-size: 0.65rem; margin-top: 1rem; color: var(--text-muted);">FIG. 00 — ROTATING FIELD</div>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-header">
-      <span>Section I</span>
-      <span>Smiljan & Early Conceptions</span>
-    </div>
-    <h2>A Mind Configured for Fields</h2>
-    <div class="panel-grid">
-      <p>Born in 1856 within the Austrian Empire, Tesla exhibited an extraordinary visualization faculty. He possessed the capacity to construct, operate, and stress-test complex machinery entirely within his consciousness prior to committing a single schematic to paper.</p>
-      <p>During his studies in Graz and Prague, witnessing the erratic commutation of direct-current equipment ignited his pursuit of continuous rotational forces driven by alternating magnetic waves.</p>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-header">
-      <span>Section II</span>
-      <span>The Current War & Industrial Scale</span>
-    </div>
-    <h2>Alternating Power Set Free</h2>
-    <div class="panel-grid">
-      <p>Arriving in New York in 1884, Tesla’s brief alignment with Thomas Edison quickly fractured over structural paradigms of electrical distribution. Partnering subsequently with George Westinghouse secured the commercial realization of multi-phase AC.</p>
-      <p>The successful electrification of the 1893 Chicago Columbian Exposition and the ensuing Niagara Falls generation plant verified that electrical energy could reliably traverse vast topographic distances.</p>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-header">
-      <span>Section III</span>
-      <span>Long Island & Transcontinental Vision</span>
-    </div>
-    <h2>Resonance Without Conductors</h2>
-    <div class="panel-grid">
-      <p>Tesla’s inquiry expanded past localized grids toward global intelligence distribution. His 1898 demonstration of a radio-controlled automaton established early precedents for remote telemetry and autonomous logic.</p>
-      <p>Initiated in 1901, the Wardenclyffe facility sought to harness the terrestrial globe itself as a conduction medium. Though financial pressures halted its completion, its architecture anticipated modern wireless networks.</p>
-    </div>
-  </section>
-
-  <section class="timeline-section">
-    <div class="panel-header">
-      <span>Section IV</span>
-      <span>Chronological Index</span>
-    </div>
-    <h2>Milestones of Record</h2>
-    
-    <div class="timeline-container">
-      <div class="timeline-readout">
-        <div class="timeline-year" id="yearDisplay">1856</div>
-        <div class="timeline-range">SPAN: 1856 — 1943</div>
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-visuals">
+        <div class="fig-label">Fig. 0 — Portrait of the Inventor</div>
+        <div class="coil-wrap">
+          <svg viewBox="0 0 220 220">
+            <circle class="coil-ring" cx="110" cy="110" r="95"/>
+            <circle class="coil-ring" cx="110" cy="110" r="78"/>
+            <line class="coil-core" x1="110" y1="30" x2="110" y2="190"/>
+            <path class="arc" d="M110,30 Q150,60 130,90 Q100,120 140,150 Q160,170 110,190"/>
+            <path class="arc" d="M110,30 Q70,55 95,85 Q125,115 80,145 Q60,165 110,190"/>
+            <path class="arc" d="M110,30 Q140,70 105,100 Q80,130 120,160 Q140,178 110,190"/>
+            <path class="arc" d="M110,30 Q75,65 115,95 Q145,125 100,155 Q80,175 110,190"/>
+          </svg>
+        </div>
       </div>
-      
-      <input type="range" id="timelineSlider" min="0" max="9" step="1" value="0">
-      
-      <div class="timeline-ticks" id="tickContainer"></div>
-      
-      <div class="timeline-content" id="eventBox">
-        <h3 id="eventTitle">Birth in Smiljan</h3>
-        <p id="eventDesc">Nikola Tesla is born in the village of Smiljan, Austrian Empire, displaying early aptitudes for intense visualization and spatial geometry.</p>
+      <div class="hero-text">
+        <h1 class="name">NIKOLA TESLA</h1>
+        <p class="subhead">1856 – 1943 · Engineer of alternating current, wireless transmission, and the electrified century that followed him.</p>
+        <div class="patent-no">ARCHIVE RECORD — REF: NT-1856</div>
+      </div>
+    </div>
+    <div class="scroll-cue"><span class="line"></span>SCROLL</div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel">
+      <div class="fig-sidebar">
+        <span class="fig-tag">FIG. 01</span>
+        <span class="callout-num">01 · SMILJAN, CROATIA</span>
+      </div>
+      <div class="fig-content">
+        <h2>A Mind Wired for Invention</h2>
+        <div class="text-grid">
+          <p>Born in 1856 in the village of Smiljan, Tesla showed an early gift for visualizing entire machines in his head before ever touching a tool. He claimed he could build and test an invention mentally, down to its wear points, without drawing a single line.</p>
+          <p>He studied engineering in Graz and Prague, and it was there, staring at a sparking DC motor, that he first imagined a rotating magnetic field — the idea that alternating current could spin in continuous, elegant motion.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="panel" style="border-bottom: none;">
-    <div class="panel-header">
-      <span>Section V</span>
-      <span>Enduring Infrastructure</span>
+  <section class="reveal">
+    <div class="fig-panel">
+      <div class="fig-sidebar">
+        <span class="fig-tag">FIG. 02</span>
+        <span class="callout-num">02 · THE CURRENT WAR</span>
+      </div>
+      <div class="fig-content">
+        <h2>Alternating Current, Set Loose</h2>
+        <div class="text-grid">
+          <p>In 1884 Tesla arrived in New York with little more than a letter of introduction to Thomas Edison. Their partnership was brief; Tesla's belief in alternating current put him at odds with Edison's DC empire. By 1888 his AC induction motor patents had been licensed by George Westinghouse.</p>
+          <p>The rivalry became public spectacle. Tesla's system won the contract to light the 1893 World's Columbian Exposition in Chicago, and two years later it was harnessing Niagara Falls itself — proving power could travel vast distances.</p>
+        </div>
+      </div>
     </div>
-    <h2>The Structural Legacy</h2>
-    <div class="panel-grid">
-      <p>Tesla passed away in New York in 1943. Despite periods of subsequent historical obscurity, the multi-phase AC framework he engineered remains the foundational architecture powering global civilization today.</p>
-      <p>From residential distribution panels to heavy industrial grids, contemporary electrical engineering continues operating on principles formalized within his nineteenth-century patent filings.</p>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel">
+      <div class="fig-sidebar">
+        <span class="fig-tag">FIG. 03</span>
+        <span class="callout-num">03 · WARDENCLYFFE, LONG ISLAND</span>
+      </div>
+      <div class="fig-content">
+        <h2>A World Without Wires</h2>
+        <div class="text-grid">
+          <p>Tesla's ambitions outgrew the power grid. In 1898 he demonstrated a radio-controlled boat to a startled New York audience — one of the first working precursors of robotics. He believed the same principle could transmit electricity through the air.</p>
+          <p>Construction began on the Wardenclyffe Tower in 1901, meant to broadcast wireless power across the Atlantic. Funding collapsed before full testing, but its silhouette remains a towering symbol of visionary foresight.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline-section reveal">
+    <div class="timeline-header">
+      <div class="section-eyebrow">Interactive Record</div>
+      <h2 class="section-title">A Life, Scanned by Timeline</h2>
+      <p class="section-sub">Drag the dial or click any year on the tick bar to review pivotal milestones in Tesla's career.</p>
+    </div>
+
+    <div class="dial-panel">
+      <div class="year-readout">
+        <div class="year-big" id="yearBig">1856</div>
+        <div class="year-range">1856 —— 1943</div>
+      </div>
+      <input type="range" id="yearSlider" min="0" max="9" step="1" value="0" aria-label="Timeline year selector">
+      <div class="tick-row" id="tickRow"></div>
+      <div class="event-card" id="eventCard">
+        <div class="ev-title" id="evTitle">Born in Smiljan</div>
+        <p class="ev-body" id="evBody">Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="fig-panel">
+      <div class="fig-sidebar">
+        <span class="fig-tag">FIG. 04</span>
+        <span class="callout-num">04 · LEGACY</span>
+      </div>
+      <div class="fig-content">
+        <h2>What Still Runs on His Ideas</h2>
+        <div class="text-grid">
+          <p>Tesla died in New York in 1943, largely out of the public eye. Yet the alternating current system he championed became the backbone of the electrical grid the world still runs on — from household appliances to massive city substations.</p>
+          <p>His fingerprints span radio, remote control, and wireless theory. Modern digital and electrical infrastructure trace a direct line back to the visionary patents he filed over a century ago.</p>
+        </div>
+      </div>
     </div>
   </section>
 </main>
 
 <footer>
-  ARCHIVAL RECORD · DOCUMENT COMPILED FOR HISTORICAL PRESERVATION
+  <div class="seal">ARCHIVE</div>
+  Architectural Record · Clean Industrial Palette
 </footer>
 
 <script>
 (function(){
   const body = document.body;
-  const toggleBtn = document.getElementById('modeToggle');
+  const switchBtn = document.getElementById('switchBtn');
+  const modeLabel = document.getElementById('modeLabel');
 
-  toggleBtn.addEventListener('click', () => {
-    const isLight = body.classList.toggle('light');
-    toggleBtn.textContent = isLight ? 'MODE: PAPER' : 'MODE: ARCHIVE';
+  function setMode(day){
+    body.classList.toggle('day', day);
+    modeLabel.textContent = day ? 'DAY' : 'NIGHT';
+    switchBtn.setAttribute('aria-pressed', day ? 'true' : 'false');
+  }
+  setMode(false);
+
+  switchBtn.addEventListener('click', () => setMode(!body.classList.contains('day')));
+  switchBtn.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setMode(!body.classList.contains('day')); }
   });
 
-  const timelineData = [
-    { year: 1856, title: "Birth in Smiljan", desc: "Nikola Tesla is born in the village of Smiljan, Austrian Empire, displaying early aptitudes for intense visualization and spatial geometry." },
-    { year: 1882, title: "The Rotating Magnetic Field", desc: "While walking through a Budapest park, Tesla visualizes the operational principle of the rotating magnetic field, solving the core limitation of AC motors." },
-    { year: 1884, title: "Emigration to New York", desc: "Tesla arrives in the United States with four cents in his pocket and a letter of recommendation addressed to Thomas Edison." },
-    { year: 1888, title: "Westinghouse Licensing", desc: "George Westinghouse acquires Tesla's fundamental patents covering multi-phase alternating current distribution systems." },
-    { year: 1891, title: "Invention of the Tesla Coil", desc: "Tesla patents the resonant transformer circuit capable of generating high voltages at high frequencies, opening doors to wireless study." },
-    { year: 1893, title: "Chicago World's Fair", desc: "The alternating current system lights the World's Columbian Exposition safely and brilliantly before millions of spectators." },
-    { year: 1895, title: "Niagara Falls Generation", desc: "The Adams Power Plant at Niagara Falls goes online, transmitting alternating current electricity successfully to Buffalo, New York." },
-    { year: 1898, title: "Teutomaton Demonstration", desc: "Tesla exhibits a radio-controlled robotic boat at Madison Square Garden, introducing foundational wireless control concepts." },
-    { year: 1901, title: "Wardenclyffe Construction", desc: "Construction begins on the massive transmission tower in Shoreham, Long Island, aimed at transoceanic wireless power and communication." },
-    { year: 1943, title: "Passing in New York", desc: "Tesla passes away at the Hotel New Yorker, leaving behind notebooks filled with advanced mechanical and electrical theories." }
+  const hero = document.getElementById('hero');
+  requestAnimationFrame(() => setTimeout(() => hero.classList.add('charged'), 400));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  const events = [
+    { year: 1856, title: "Born in Smiljan", body: "Nikola Tesla is born to Serbian parents in the Austrian Empire village of Smiljan, showing early signs of an unusually vivid visual imagination." },
+    { year: 1882, title: "The Rotating Field", body: "While walking in a Budapest park, Tesla visualizes the principle of the rotating magnetic field — the seed of every practical AC motor that followed." },
+    { year: 1884, title: "Arrives in New York", body: "Tesla emigrates to the United States and briefly works for Thomas Edison, before differing visions for power drive him to strike out alone." },
+    { year: 1888, title: "AC Patents Licensed", body: "George Westinghouse licenses Tesla's AC induction motor patents, arming the 'War of Currents' with a serious alternative to DC systems." },
+    { year: 1891, title: "The Tesla Coil", body: "Tesla patents his high-frequency resonant transformer and begins touring with dazzling public demonstrations of wireless illumination." },
+    { year: 1893, title: "Chicago World's Fair", body: "Tesla and Westinghouse's AC system is chosen to illuminate the World's Columbian Exposition, lighting the fairgrounds for millions." },
+    { year: 1895, title: "Niagara Falls Power", body: "A hydroelectric AC power station at Niagara Falls begins transmitting electricity over distance, proving the case for AC once and for all." },
+    { year: 1898, title: "Radio-Controlled Boat", body: "Tesla demonstrates a wirelessly steered boat to a startled New York audience, an early ancestor of remote control and robotics." },
+    { year: 1901, title: "Wardenclyffe Begins", body: "Construction starts on the Wardenclyffe Tower, Tesla's ambitious attempt at worldwide wireless communication and power transmission." },
+    { year: 1943, title: "Tesla Dies in New York", body: "Tesla passes away largely out of the public eye, leaving behind an AC power system that still forms the backbone of modern civilization." }
   ];
 
-  const slider = document.getElementById('timelineSlider');
-  const yearDisplay = document.getElementById('yearDisplay');
-  const eventTitle = document.getElementById('eventTitle');
-  const eventDesc = document.getElementById('eventDesc');
-  const tickContainer = document.getElementById('tickContainer');
-  const eventBox = document.getElementById('eventBox');
+  const slider = document.getElementById('yearSlider');
+  const yearBig = document.getElementById('yearBig');
+  const evTitle = document.getElementById('evTitle');
+  const evBody = document.getElementById('evBody');
+  const tickRow = document.getElementById('tickRow');
+  const eventCard = document.getElementById('eventCard');
 
-  timelineData.forEach((item, idx) => {
+  events.forEach((e, i) => {
     const span = document.createElement('span');
-    span.textContent = item.year;
+    span.textContent = e.year;
+    span.title = `Jump to ${e.year}`;
     span.addEventListener('click', () => {
-      slider.value = idx;
-      updateTimeline(idx);
+      slider.value = i;
+      renderEvent(i);
     });
-    tickContainer.appendChild(span);
+    tickRow.appendChild(span);
   });
 
-  function updateTimeline(index) {
-    const data = timelineData[index];
-    eventBox.style.opacity = '0';
+  function renderEvent(i){
+    const e = events[i];
+    eventCard.style.opacity = '0';
     setTimeout(() => {
-      yearDisplay.textContent = data.year;
-      eventTitle.textContent = data.title;
-      eventDesc.textContent = data.desc;
-      eventBox.style.opacity = '1';
-    }, 150);
+      yearBig.textContent = e.year;
+      evTitle.textContent = e.title;
+      evBody.textContent = e.body;
+      eventCard.style.opacity = '1';
+    }, 120);
   }
 
-  slider.addEventListener('input', (e) => {
-    updateTimeline(parseInt(e.target.value, 10));
+  slider.addEventListener('input', () => {
+    renderEvent(parseInt(slider.value, 10));
   });
+
+  renderEvent(0);
 })();
 </script>
 </body>
