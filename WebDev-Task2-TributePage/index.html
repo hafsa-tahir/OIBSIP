@@ -4,22 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A responsive tribute page dedicated to Marie Curie, pioneering scientist and two-time Nobel Prize winner.">
+
+    <meta
+        name="description"
+        content="A modern responsive tribute page dedicated to Marie Curie."
+    >
+
     <title>Marie Curie — A Legacy of Discovery</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
+        rel="stylesheet"
+    >
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- Navigation -->
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
+
     <header class="site-header">
-        <nav class="navbar container">
-            <a href="#hero" class="brand">MC<span>.</span></a>
+
+        <nav class="navbar">
+
+            <a href="#hero" class="brand">
+                MC<span>.</span>
+            </a>
 
             <div class="nav-links">
                 <a href="#about">About</a>
@@ -27,22 +44,41 @@
                 <a href="#legacy">Legacy</a>
             </div>
 
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                <span class="theme-icon">☾</span>
+            <button
+                type="button"
+                class="theme-toggle"
+                id="themeToggle"
+                aria-label="Switch to dark mode"
+                aria-pressed="false"
+            >
+                <span id="themeIcon">☾</span>
             </button>
+
         </nav>
+
     </header>
+
 
     <main>
 
-        <!-- Hero -->
+        <!-- =========================
+             HERO
+        ========================== -->
+
         <section class="hero" id="hero">
-            <div class="hero-grid container">
+
+            <div class="hero-grid">
 
                 <div class="hero-content reveal">
-                    <p class="eyebrow">PIONEER • SCIENTIST • VISIONARY</p>
 
-                    <h1>Marie<br><em>Curie</em></h1>
+                    <p class="eyebrow">
+                        PIONEER • SCIENTIST • VISIONARY
+                    </p>
+
+                    <h1>
+                        Marie<br>
+                        <em>Curie</em>
+                    </h1>
 
                     <p class="hero-tagline">
                         A life devoted to discovery, scientific courage,
@@ -53,40 +89,57 @@
                         Explore her story
                         <span>↓</span>
                     </a>
+
                 </div>
 
+
                 <div class="hero-image-wrap reveal">
+
                     <div class="image-frame">
+
                         <img
                             src="assets/marie-curie.jpg"
                             alt="Portrait of Marie Curie"
                         >
+
                     </div>
 
                     <div class="hero-caption">
                         <span>1867 — 1934</span>
-                        <span>Warsaw → Paris</span>
+                        <span>WARSAW → PARIS</span>
                     </div>
+
                 </div>
 
             </div>
 
-            <div class="hero-bottom container">
+
+            <div class="hero-bottom">
+
                 <span>TRIBUTE PAGE</span>
                 <span>01 / 05</span>
+
             </div>
+
         </section>
 
-        <!-- Introduction -->
+
+        <!-- =========================
+             INTRODUCTION
+        ========================== -->
+
         <section class="intro section-light">
-            <div class="container intro-grid">
+
+            <div class="intro-grid">
 
                 <div class="section-number reveal">
                     <span>01</span>
                     <span>INTRODUCTION</span>
                 </div>
 
+
                 <div class="intro-content reveal">
+
                     <p class="large-text">
                         Marie Curie transformed the world of science through
                         her relentless curiosity and groundbreaking research
@@ -99,96 +152,166 @@
                         She became one of the most influential scientists in
                         modern history.
                     </p>
+
                 </div>
 
             </div>
+
         </section>
 
-        <!-- Biography -->
+
+        <!-- =========================
+             BIOGRAPHY
+        ========================== -->
+
         <section class="about section-dark" id="about">
-            <div class="container">
+
+            <div class="section-container">
 
                 <div class="section-heading reveal">
+
                     <div>
-                        <p class="eyebrow">HER STORY</p>
-                        <h2>A mind that<br><em>changed science.</em></h2>
+
+                        <p class="eyebrow">
+                            HER STORY
+                        </p>
+
+                        <h2>
+                            A mind that<br>
+                            <em>changed science.</em>
+                        </h2>
+
                     </div>
 
-                    <p class="section-index">02 / BIOGRAPHY</p>
+                    <p class="section-index">
+                        02 / BIOGRAPHY
+                    </p>
+
                 </div>
+
 
                 <div class="bio-grid">
 
                     <article class="bio-card reveal">
-                        <span class="bio-number">01</span>
-                        <h3>Early Years</h3>
+
+                        <span class="bio-number">
+                            01
+                        </span>
+
+                        <h3>
+                            Early Years
+                        </h3>
+
                         <p>
-                            Born Maria Skłodowska in Warsaw in 1867, Curie grew
-                            up in a family that valued education. Opportunities
-                            for women in higher education were severely limited
-                            in her homeland, but her determination to study
-                            never faded.
+                            Born Maria Skłodowska in Warsaw in 1867, Curie
+                            grew up in a family that placed enormous value
+                            on education. At a time when women faced major
+                            barriers to higher education in her homeland,
+                            she remained determined to continue learning.
                         </p>
+
                     </article>
 
-                    <article class="bio-card reveal">
-                        <span class="bio-number">02</span>
-                        <h3>Paris & Science</h3>
-                        <p>
-                            She eventually moved to Paris and enrolled at the
-                            Sorbonne, where she studied physics and mathematics.
-                            Despite financial difficulties and demanding living
-                            conditions, she excelled academically and built the
-                            foundation for her scientific career.
-                        </p>
-                    </article>
 
                     <article class="bio-card reveal">
-                        <span class="bio-number">03</span>
-                        <h3>Groundbreaking Research</h3>
+
+                        <span class="bio-number">
+                            02
+                        </span>
+
+                        <h3>
+                            Paris & Science
+                        </h3>
+
                         <p>
-                            Working alongside Pierre Curie, she investigated
-                            mysterious emissions produced by certain materials.
-                            Their research led to the identification of new
-                            elements, including polonium and radium, and helped
-                            establish radioactivity as an important scientific
-                            field.
+                            She moved to Paris and enrolled at the Sorbonne,
+                            studying physics and mathematics. Despite financial
+                            hardship and demanding living conditions, she
+                            performed exceptionally well and established the
+                            academic foundation for her scientific career.
                         </p>
+
                     </article>
 
+
                     <article class="bio-card reveal">
-                        <span class="bio-number">04</span>
-                        <h3>A Lasting Legacy</h3>
+
+                        <span class="bio-number">
+                            03
+                        </span>
+
+                        <h3>
+                            Groundbreaking Research
+                        </h3>
+
                         <p>
-                            Curie's scientific achievements earned her two Nobel
-                            Prizes in different scientific disciplines. During
-                            the First World War, she also supported the use of
-                            mobile X-ray units to help doctors treat wounded
-                            soldiers. Her discoveries continued to influence
-                            medicine and scientific research long after her
-                            death.
+                            Working with Pierre Curie, she investigated unusual
+                            radiation emitted by certain materials. Their
+                            experiments contributed to the discovery of polonium
+                            and radium and helped establish radioactivity as a
+                            major field of scientific study.
                         </p>
+
+                    </article>
+
+
+                    <article class="bio-card reveal">
+
+                        <span class="bio-number">
+                            04
+                        </span>
+
+                        <h3>
+                            A Lasting Legacy
+                        </h3>
+
+                        <p>
+                            Curie's scientific accomplishments earned her Nobel
+                            Prizes in both Physics and Chemistry. During the
+                            First World War, she also promoted mobile X-ray
+                            services that helped doctors examine wounded
+                            soldiers closer to the battlefield.
+                        </p>
+
                     </article>
 
                 </div>
+
             </div>
+
         </section>
 
-        <!-- Achievements -->
+
+        <!-- =========================
+             ACHIEVEMENTS
+        ========================== -->
+
         <section class="achievements section-accent">
-            <div class="container achievements-grid">
+
+            <div class="section-container achievements-grid">
 
                 <div class="achievement-intro reveal">
-                    <p class="eyebrow">SCIENTIFIC MILESTONES</p>
-                    <h2>Discovery<br>through <em>persistence.</em></h2>
+
+                    <p class="eyebrow">
+                        SCIENTIFIC MILESTONES
+                    </p>
+
+                    <h2>
+                        Discovery<br>
+                        through <em>persistence.</em>
+                    </h2>
+
                     <p>
                         Curie's career was shaped by years of experimentation,
                         careful observation, and an extraordinary commitment
                         to scientific discovery.
                     </p>
+
                 </div>
 
+
                 <div class="stats reveal">
+
                     <div class="stat">
                         <strong>2</strong>
                         <span>Nobel Prizes</span>
@@ -196,241 +319,399 @@
 
                     <div class="stat">
                         <strong>2</strong>
-                        <span>Scientific fields</span>
+                        <span>Scientific Fields</span>
                     </div>
 
                     <div class="stat">
                         <strong>1</strong>
-                        <span>Extraordinary legacy</span>
+                        <span>Extraordinary Legacy</span>
                     </div>
+
                 </div>
 
             </div>
+
         </section>
 
-        <!-- Timeline -->
+
+        <!-- =========================
+             TIMELINE
+        ========================== -->
+
         <section class="timeline-section section-light" id="timeline">
-            <div class="container">
+
+            <div class="section-container">
 
                 <div class="section-heading timeline-heading reveal">
+
                     <div>
-                        <p class="eyebrow">THE JOURNEY</p>
-                        <h2>Moments that<br><em>made history.</em></h2>
+
+                        <p class="eyebrow">
+                            THE JOURNEY
+                        </p>
+
+                        <h2>
+                            Moments that<br>
+                            <em>made history.</em>
+                        </h2>
+
                     </div>
 
-                    <p class="section-index">03 / TIMELINE</p>
+                    <p class="section-index">
+                        03 / TIMELINE
+                    </p>
+
                 </div>
+
 
                 <div class="timeline">
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1867</div>
+
+                        <div class="timeline-year">
+                            1867
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>WARSAW</span>
-                            <h3>A Scientist Is Born</h3>
+
+                            <h3>
+                                A Scientist Is Born
+                            </h3>
+
                             <p>
-                                Maria Skłodowska was born in Warsaw, then part
-                                of the Russian Empire. Her family encouraged
-                                education despite difficult political and
-                                economic circumstances.
+                                Maria Skłodowska was born in Warsaw. Her family
+                                encouraged education despite the political and
+                                social challenges surrounding Poland at the time.
                             </p>
+
                         </div>
+
                     </article>
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1891</div>
+
+                        <div class="timeline-year">
+                            1891
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>PARIS</span>
-                            <h3>A New Academic Life</h3>
+
+                            <h3>
+                                A New Academic Life
+                            </h3>
+
                             <p>
                                 Curie moved to Paris and began studying at the
-                                University of Paris, where she pursued physics
-                                and mathematics.
+                                University of Paris, pursuing physics and
+                                mathematics.
                             </p>
+
                         </div>
+
                     </article>
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1898</div>
+
+                        <div class="timeline-year">
+                            1898
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>DISCOVERY</span>
-                            <h3>Polonium & Radium</h3>
+
+                            <h3>
+                                Polonium & Radium
+                            </h3>
+
                             <p>
                                 Marie and Pierre Curie announced the discovery
                                 of polonium and later identified radium while
                                 studying radioactive materials.
                             </p>
+
                         </div>
+
                     </article>
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1903</div>
+
+                        <div class="timeline-year">
+                            1903
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>NOBEL PRIZE</span>
-                            <h3>Nobel Prize in Physics</h3>
+
+                            <h3>
+                                Nobel Prize in Physics
+                            </h3>
+
                             <p>
                                 Curie shared the Nobel Prize in Physics with
                                 Pierre Curie and Henri Becquerel for their
                                 contributions to understanding radiation.
                             </p>
+
                         </div>
+
                     </article>
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1911</div>
+
+                        <div class="timeline-year">
+                            1911
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>NOBEL PRIZE</span>
-                            <h3>Nobel Prize in Chemistry</h3>
+
+                            <h3>
+                                Nobel Prize in Chemistry
+                            </h3>
+
                             <p>
-                                She received a second Nobel Prize, this time in
-                                Chemistry, for her work involving radium and
-                                polonium and the study of their properties.
+                                Curie received a second Nobel Prize, this time
+                                in Chemistry, recognizing her work involving
+                                radium and polonium.
                             </p>
+
                         </div>
+
                     </article>
 
+
                     <article class="timeline-item reveal">
-                        <div class="timeline-year">1914–18</div>
+
+                        <div class="timeline-year">
+                            1914–18
+                        </div>
 
                         <div class="timeline-dot"></div>
 
                         <div class="timeline-content">
+
                             <span>WORLD WAR I</span>
-                            <h3>Science on the Front Lines</h3>
+
+                            <h3>
+                                Science on the Front Lines
+                            </h3>
+
                             <p>
-                                Curie helped develop and organize mobile
-                                radiography units that allowed X-ray
-                                examinations to be carried out closer to
+                                Curie helped organize mobile radiography units,
+                                making X-ray examinations more accessible for
                                 wounded soldiers.
                             </p>
+
                         </div>
+
                     </article>
 
+
                 </div>
+
             </div>
+
         </section>
 
-        <!-- Quote -->
-        <section class="quote-section">
-            <div class="container quote-container reveal">
 
-                <div class="quote-mark">“</div>
+        <!-- =========================
+             QUOTE
+        ========================== -->
+
+        <section class="quote-section">
+
+            <div class="quote-container reveal">
+
+                <div class="quote-mark">
+                    “
+                </div>
 
                 <blockquote>
-                    “Nothing in life is to be feared,
-                    it is only to be understood.”
+                    Nothing in life is to be feared,
+                    it is only to be understood.
                 </blockquote>
 
                 <div class="quote-line"></div>
 
-                <p>— Marie Curie</p>
+                <p>
+                    — MARIE CURIE
+                </p>
 
             </div>
+
         </section>
 
-        <!-- Legacy -->
+
+        <!-- =========================
+             LEGACY
+        ========================== -->
+
         <section class="legacy section-dark" id="legacy">
-            <div class="container">
+
+            <div class="section-container">
 
                 <div class="section-heading reveal">
+
                     <div>
-                        <p class="eyebrow">BEYOND HER TIME</p>
-                        <h2>The legacy<br><em>continues.</em></h2>
+
+                        <p class="eyebrow">
+                            BEYOND HER TIME
+                        </p>
+
+                        <h2>
+                            The legacy<br>
+                            <em>continues.</em>
+                        </h2>
+
                     </div>
 
-                    <p class="section-index">04 / LEGACY</p>
+                    <p class="section-index">
+                        04 / LEGACY
+                    </p>
+
                 </div>
+
 
                 <div class="legacy-grid">
 
                     <div class="legacy-main reveal">
+
                         <p class="legacy-large">
                             Marie Curie's influence reaches far beyond the
-                            discoveries that earned her international
-                            recognition.
+                            discoveries that earned her international recognition.
                         </p>
 
                         <p>
                             Her research helped establish radioactivity as a
-                            major area of scientific investigation and
-                            contributed to later developments in medical
-                            diagnosis and treatment.
+                            major area of scientific investigation and influenced
+                            later developments in medical diagnosis and treatment.
                         </p>
 
                         <p>
-                            Just as important was the example she set. Curie's
-                            career demonstrated how persistence, intellectual
-                            curiosity, and rigorous research could overcome
-                            barriers that once seemed impossible.
+                            Her life also became an example of perseverance.
+                            Curie's career demonstrated how intellectual curiosity,
+                            rigorous research, and persistence could overcome
+                            significant social and professional barriers.
                         </p>
+
                     </div>
+
 
                     <div class="legacy-list reveal">
 
                         <div class="legacy-item">
+
                             <span>01</span>
+
                             <div>
-                                <h3>Scientific Pioneer</h3>
+
+                                <h3>
+                                    Scientific Pioneer
+                                </h3>
+
                                 <p>
                                     Helped establish radioactivity as a major
                                     scientific field.
                                 </p>
+
                             </div>
+
                         </div>
 
+
                         <div class="legacy-item">
+
                             <span>02</span>
+
                             <div>
-                                <h3>Medical Impact</h3>
+
+                                <h3>
+                                    Medical Impact
+                                </h3>
+
                                 <p>
-                                    Her research contributed to the development
-                                    of radiation-based medical applications.
+                                    Her research contributed to radiation-based
+                                    medical applications.
                                 </p>
+
                             </div>
+
                         </div>
 
+
                         <div class="legacy-item">
+
                             <span>03</span>
+
                             <div>
-                                <h3>Inspiration</h3>
+
+                                <h3>
+                                    Inspiration
+                                </h3>
+
                                 <p>
                                     Became a lasting symbol of scientific
                                     determination and curiosity.
                                 </p>
+
                             </div>
+
                         </div>
 
                     </div>
 
                 </div>
+
             </div>
+
         </section>
 
-        <!-- Sources -->
+
+        <!-- =========================
+             SOURCES
+        ========================== -->
+
         <section class="sources section-light">
-            <div class="container sources-grid">
+
+            <div class="section-container sources-grid">
 
                 <div class="reveal">
-                    <p class="eyebrow">RESEARCH & ATTRIBUTION</p>
-                    <h2>Sources</h2>
+
+                    <p class="eyebrow">
+                        RESEARCH & ATTRIBUTION
+                    </p>
+
+                    <h2>
+                        Sources
+                    </h2>
+
                 </div>
 
+
                 <div class="sources-content reveal">
+
                     <p>
                         This tribute page was created for educational purposes.
                         Historical information was researched and paraphrased
@@ -438,46 +719,86 @@
                     </p>
 
                     <ul>
+
                         <li>
-                            Encyclopaedia Britannica — Marie Curie biography
+                            Encyclopaedia Britannica — Marie Curie
                         </li>
+
                         <li>
                             Wikipedia — Marie Curie
                         </li>
+
                         <li>
-                            Wikimedia Commons — Marie Curie public-domain imagery
+                            Wikimedia Commons — Marie Curie imagery
                         </li>
+
                     </ul>
 
-                    <p class="attribution">
-                        Image attribution should be updated with the exact
-                        Wikimedia Commons file and creator information of the
-                        image used in the <strong>assets</strong> folder.
-                    </p>
+                    <div class="attribution">
+
+                        <strong>Image Attribution</strong>
+
+                        <p>
+                            Replace this text with the exact Wikimedia Commons
+                            file name, creator and license information for the
+                            image you use in the assets folder.
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
+
         </section>
 
     </main>
 
-    <!-- Footer -->
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
     <footer class="footer">
-        <div class="container footer-inner">
+
+        <div class="footer-inner">
+
             <div>
-                <span class="footer-brand">MC<span>.</span></span>
-                <p>A tribute to a life of discovery.</p>
+
+                <span class="footer-brand">
+                    MC<span>.</span>
+                </span>
+
+                <p>
+                    A tribute to a life of discovery.
+                </p>
+
             </div>
+
 
             <div class="footer-meta">
-                <span>OIBSIP • WEB DEVELOPMENT</span>
-                <span>TRIBUTE PAGE • TASK 2</span>
-                <span>© 2026</span>
+
+                <span>
+                    OIBSIP • WEB DEVELOPMENT
+                </span>
+
+                <span>
+                    TASK 2 • TRIBUTE PAGE
+                </span>
+
+                <span id="footerYear">
+                    © 2026
+                </span>
+
             </div>
+
         </div>
+
     </footer>
 
+
     <script src="script.js"></script>
+
 </body>
 </html>
 ```
