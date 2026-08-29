@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaskLedger — Advanced To-Do Application</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="app-title">TaskLedger <span>OIBSIP // L2</span></div>
+    <div id="taskStats" class="header-stats">0 pending · 0 completed</div>
+  </header>
+
+  <!-- Add Task Form -->
+  <form class="task-form" id="taskForm">
+    <input type="text" id="taskInput" placeholder="What needs to be done?" required autocomplete="off">
+    <select id="categoryInput" aria-label="Category">
+      <option value="Work">Work</option>
+      <option value="Personal">Personal</option>
+      <option value="Study">Study</option>
+      <option value="Finance">Finance</option>
+    </select>
+    <select id="priorityInput" aria-label="Priority">
+      <option value="Medium">Medium Priority</option>
+      <option value="High">High Priority</option>
+      <option value="Low">Low Priority</option>
+    </select>
+    <div class="date-add-row">
+      <input type="date" id="dateInput" required aria-label="Due date">
+      <button type="submit" class="btn">Add</button>
+    </div>
+  </form>
+
+  <!-- Search -->
+  <div class="controls">
+    <div class="search-group">
+      <input type="text" id="searchInput" placeholder="Search tasks or tags...">
+    </div>
+  </div>
+
+  <!-- Pending Tasks -->
+  <section class="task-section">
+    <div class="section-head">
+      <h2>Pending Tasks</h2>
+      <span class="count-badge" id="pendingCount">0 pending</span>
+    </div>
+    <ul class="task-list" id="pendingList" data-status="pending">
+      <!-- Rendered dynamically -->
+    </ul>
+  </section>
+
+  <!-- Completed Tasks -->
+  <section class="task-section">
+    <div class="section-head">
+      <h2>Completed Tasks</h2>
+      <span class="count-badge" id="completedCount">0 completed</span>
+    </div>
+    <ul class="task-list" id="completedList" data-status="completed">
+      <!-- Rendered dynamically -->
+    </ul>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
