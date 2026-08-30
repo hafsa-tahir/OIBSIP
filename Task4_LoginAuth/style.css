@@ -1,0 +1,203 @@
+:root{
+  --bg: #0B0F14;
+  --panel: #121821;
+  --panel-raised: #171F2A;
+  --border: #232D3A;
+  --text: #E4E9EF;
+  --text-dim: #7C8B9B;
+  --accent: #35D0BA;
+  --accent-dim: rgba(53, 208, 186, 0.12);
+  --danger: #FF5C5C;
+  --danger-dim: rgba(255, 92, 92, 0.12);
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-body: 'Inter', sans-serif;
+}
+
+*{ box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body{ height: 100%; }
+
+body{
+  background: var(--bg);
+  background-image:
+    linear-gradient(rgba(53,208,186,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(53,208,186,0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--text);
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  line-height: 1.5;
+}
+
+.card{
+  width: 100%;
+  max-width: 420px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2.25rem;
+  box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+}
+
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+.brand .dot{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+h1{
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle{
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  margin-bottom: 1.75rem;
+}
+
+.field{ margin-bottom: 1.1rem; }
+
+label{
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+input[type="text"], input[type="password"], input[type="email"]{
+  width: 100%;
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.hint{
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+.btn{
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #05201B;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.05s ease;
+  margin-top: 0.4rem;
+}
+.btn:hover{ filter: brightness(1.08); }
+.btn:active{ transform: scale(0.98); }
+
+.btn-secondary{
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover{ border-color: var(--text-dim); filter: none; }
+
+.btn-danger{
+  background: var(--danger);
+  color: #2A0A0A;
+}
+
+.alert{
+  display: none;
+  background: var(--danger-dim);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.1rem;
+}
+.alert.show{ display: block; }
+
+.alert.success{
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.switch-line{
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+}
+.switch-line a{ color: var(--accent); text-decoration: none; font-weight: 600; }
+.switch-line a:hover{ text-decoration: underline; }
+
+/* ---------- Dashboard-specific ---------- */
+.dash-card{ max-width: 560px; }
+
+.dash-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.session-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.info-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+  margin: 1.5rem 0;
+}
+
+.info-box{
+  background: var(--panel-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem;
+}
+.info-box .label{ font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.info-box .value{ font-family: var(--font-mono); font-size: 0.95rem; word-break: break-word; }
+
+@media (max-width: 460px){
+  .info-grid{ grid-template-columns: 1fr; }
+  .card{ padding: 1.5rem; }
+}
