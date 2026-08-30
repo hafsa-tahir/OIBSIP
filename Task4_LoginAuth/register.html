@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — SecureAccess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card">
+  <div class="brand"><span class="dot"></span> SECUREACCESS // AUTH</div>
+
+  <h1>Create your account</h1>
+  <p class="subtitle">Takes less than a minute.</p>
+
+  <div class="alert" id="alertBox"></div>
+
+  <form id="registerForm" novalidate>
+    <div class="field">
+      <label for="username">Username or email</label>
+      <input type="text" id="username" autocomplete="username" required>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="new-password" required>
+      <div class="hint">At least 8 characters, including 1 number.</div>
+    </div>
+
+    <div class="field">
+      <label for="confirmPassword">Confirm password</label>
+      <input type="password" id="confirmPassword" autocomplete="new-password" required>
+    </div>
+
+    <button type="submit" class="btn">Register</button>
+  </form>
+
+  <p class="switch-line">Already have an account? <a href="login.html">Log in</a></p>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  AUTH.redirectIfLoggedIn();
+
+  const form = document.getElementById('registerForm');
+  const alertBox = document.getElementById('alertBox');
+
+  function showAlert(message, type = 'error') {
+    alertBox.textContent = message;
+    alertBox.className = 'alert show' + (type === 'success' ? ' success' : '');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (!username.trim() || !password || !confirmPassword) {
+      showAlert('Please fill in every field.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      showAlert('Passwords do not match.');
+      return;
+    }
+
+    const result = await AUTH.registerUser(username, password);
+    if (!result.ok) {
+      showAlert(result.error);
+      return;
+    }
+
+    showAlert('Account created! Redirecting to login\u2026', 'success');
+    setTimeout(() => { window.location.href = 'login.html'; }, 900);
+  });
+</script>
+</body>
+</html>
