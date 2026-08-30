@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — SecureAccess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+<script>
+  // Guard runs immediately, before the page paints — if there's no
+  // valid session this redirects to login.html and nothing below ever renders.
+  var __session = AUTH.requireSession();
+</script>
+</head>
+<body>
+
+<div class="card dash-card">
+  <div class="dash-header">
+    <div class="brand" style="margin-bottom:0;"><span class="dot"></span> SECUREACCESS // AUTH</div>
+    <span class="session-badge">● SESSION ACTIVE</span>
+  </div>
+
+  <h1>Welcome, <span id="userName">there</span> 👋</h1>
+  <p class="subtitle">You're viewing a protected page — this only renders because you have a valid session.</p>
+
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="label">Logged in as</div>
+      <div class="value" id="infoUsername">—</div>
+    </div>
+    <div class="info-box">
+      <div class="label">Session expires</div>
+      <div class="value" id="infoExpiry">—</div>
+    </div>
+  </div>
+
+  <button class="btn btn-danger" id="logoutBtn">Log Out</button>
+</div>
+
+<script>
+  if (__session) {
+    document.getElementById('userName').textContent = __session.username;
+    document.getElementById('infoUsername').textContent = __session.username;
+    document.getElementById('infoExpiry').textContent =
+      new Date(__session.expiresAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    AUTH.logout();
+    window.location.href = 'login.html';
+  });
+</script>
+</body>
+</html>
