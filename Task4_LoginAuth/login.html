@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — SecureAccess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card">
+  <div class="brand"><span class="dot"></span> SECUREACCESS // AUTH</div>
+
+  <h1>Welcome back</h1>
+  <p class="subtitle">Log in to reach your dashboard.</p>
+
+  <div class="alert" id="alertBox"></div>
+
+  <form id="loginForm" novalidate>
+    <div class="field">
+      <label for="username">Username or email</label>
+      <input type="text" id="username" autocomplete="username" required>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+    </div>
+
+    <button type="submit" class="btn">Log In</button>
+  </form>
+
+  <p class="switch-line">Don't have an account? <a href="register.html">Register</a></p>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  AUTH.redirectIfLoggedIn();
+
+  const form = document.getElementById('loginForm');
+  const alertBox = document.getElementById('alertBox');
+
+  function showAlert(message) {
+    alertBox.textContent = message;
+    alertBox.className = 'alert show';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (!username.trim() || !password) {
+      showAlert('Please fill in every field.');
+      return;
+    }
+
+    const result = await AUTH.loginUser(username, password);
+    if (!result.ok) {
+      showAlert(result.error);
+      return;
+    }
+
+    window.location.href = 'dashboard.html';
+  });
+</script>
+</body>
+</html>
